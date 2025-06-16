@@ -2,7 +2,7 @@ from googleapiclient.discovery import build
 import pandas as pd
 import re
 from deep_translator import GoogleTranslator
-from scriptBancoConexao import insertar_video, inserir_comentarios, criar_tabela_videos, criar_tabelas_comentarios, pegar_id_video
+from scriptBancoConexao import gerenciador_video, inserir_comentarios,pegar_id_video
 
 def get_video_id():
     try:
@@ -41,13 +41,13 @@ def get_video_info(video_id, api_key):
         if 'items' in response and len(response['items']) > 0:
             video = response['items'][0]
             info = {
+                'idVideo': video_id,
                 'title': video['snippet'].get('title', 'Sem título'),
                 'channel': video['snippet'].get('channelTitle', 'Canal desconhecido'),
                 'publish_date': video['snippet'].get('publishedAt', 'Data não disponível'),
                 'views': video['statistics'].get('viewCount', 0),
                 'likes': video['statistics'].get('likeCount', 0),
-                'comments': video['statistics'].get('commentCount', 0),
-                'video_id': video_id,
+                'comments': video['statistics'].get('commentCount', 0)
             }
             return info
         else:
@@ -111,19 +111,12 @@ def preprocess_comments(texto_original):
 
     
 API_KEY = 'AIzaSyBC1f-aU5eUNp_Xx1sfVoTOZKnBtm2uKHI' 
-# video_id = get_video_id()
 video_id = '8Pkvm8r3nUQ'
 
 def collectDate():
     video_id = get_video_id()
-    # video_id = '8Pkvm8r3nUQ'
     info = get_video_info(video_id, API_KEY)
-    criar_tabela_videos()
-    insertar_video(info)
-    video_id = info['video_id']
-    idVideo = pegar_id_video(video_id)
-    print(f"ID do vídeo na tabela: {idVideo}")
+    gerenciador_video(info)
     
     
-
 collectDate()
