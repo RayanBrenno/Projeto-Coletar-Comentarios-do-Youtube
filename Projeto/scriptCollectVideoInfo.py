@@ -85,7 +85,6 @@ def get_all_comments(video_id, api_key):
 
             for item in response.get('items', []):
                 snippet = item['snippet']['topLevelComment']['snippet']
-                print(snippet.get('textDisplay', ''))
                 comments.append({
                     'idVideo': video_id,
                     'author': snippet.get('authorDisplayName', 'Anônimo'),
