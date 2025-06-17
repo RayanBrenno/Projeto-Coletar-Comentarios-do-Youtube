@@ -1,14 +1,14 @@
 from googleapiclient.discovery import build
-import pandas as pd
 import re
 from deep_translator import GoogleTranslator
-from scriptBancoConexao import gerenciador_video, inserir_comentarios,pegar_id_video
+from scriptBancoConexao import gerenciador_video
+from scriptIAIncorporation import classificar_intencao_zero_shot
 
 def get_video_id():
     try:
         url = input("🔗 Digite a URL do vídeo: ").strip()
         if not url:
-            print("⚠️ URL vazia.")
+            print("⚠️  URL vazia.")
             return None
         
         if "youtube.com/watch?v=" in url:
@@ -22,10 +22,11 @@ def get_video_id():
         if len(video_id) != 11:
             print("❌ ID do vídeo aparentemente inválido.")
             return None
-
+        
+        print(f"✅ ID do vídeo extraído: {video_id}")
         return video_id
     except Exception as e:
-        print(f"⚠️ Erro ao processar a URL: {e}")
+        print(f"⚠️  Erro ao processar a URL: {e}")
         return None
 
 
@@ -49,6 +50,7 @@ def get_video_info(video_id, api_key):
                 'likes': video['statistics'].get('likeCount', 0),
                 'comments': video['statistics'].get('commentCount', 0)
             }
+            print(f"✅ Informações do vídeo '{info['title']}' obtidas com sucesso.")
             return info
         else:
             print("❌ Nenhuma informação encontrada para o vídeo.")
@@ -83,40 +85,39 @@ def get_all_comments(video_id, api_key):
 
             for item in response.get('items', []):
                 snippet = item['snippet']['topLevelComment']['snippet']
+                print(snippet.get('textDisplay', ''))
                 comments.append({
+                    'idVideo': video_id,
                     'author': snippet.get('authorDisplayName', 'Anônimo'),
-                    'text': preprocess_comments(snippet.get('textDisplay', '')),
+                    'text': snippet.get('textDisplay', ''),
                     'likes': snippet.get('likeCount', 0),
-                    'published_at': snippet.get('publishedAt', '')
+                    'published_at': snippet.get('publishedAt', ''),
+                    'felling': classificar_intencao_zero_shot(snippet.get('textDisplay', ''))
                 })
 
             next_page_token = response.get('nextPageToken')
             if not next_page_token:
                 break
 
-        return pd.DataFrame(comments).drop_duplicates(subset=['text']).reset_index(drop=True)
+        print(f"✅ Obtidos {len(comments)} comentários.")
+        return comments
 
     except Exception as e:
         print(f"❌ Erro geral ao obter comentários: {e}")
         return []
 
-
-def preprocess_comments(texto_original):
-    text = GoogleTranslator(source='auto', target='pt').translate(texto_original)
-    text = re.sub(r"http\S+", "", text)  
-    text = re.sub(r"@\w+", "", text)  
-    text = re.sub(r"\s+", " ", text)
-    text = re.sub(r"[^\w\s,!?()\"']", "", text)
-    return text
-
     
 API_KEY = 'AIzaSyBC1f-aU5eUNp_Xx1sfVoTOZKnBtm2uKHI' 
-video_id = '8Pkvm8r3nUQ'
+
 
 def collectDate():
     video_id = get_video_id()
+    if not video_id:
+        print("❌ Coleta de dados cancelada devido a erro no ID do vídeo.")
+        return
     info = get_video_info(video_id, API_KEY)
-    gerenciador_video(info)
+    comments = get_all_comments(video_id, API_KEY)
+    gerenciador_video(info, comments)
     
     
 collectDate()

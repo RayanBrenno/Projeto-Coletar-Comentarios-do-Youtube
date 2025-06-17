@@ -74,5 +74,4 @@ Dashboard (avançado): integrar com Power BI, Metabase, ou Gráficos via Plotly
 
 
 CHAVE Ler youtube - AIzaSyBC1f-aU5eUNp_Xx1sfVoTOZKnBtm2uKHI
-CHAVE openai - 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
 LinkVideo - https://www.youtube.com/watch?v=ThjvdPetU8g
