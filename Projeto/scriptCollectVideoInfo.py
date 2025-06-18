@@ -1,8 +1,5 @@
 from googleapiclient.discovery import build
-import re
-from deep_translator import GoogleTranslator
 from scriptBancoConexao import gerenciador_video
-from scriptIAIncorporation import classificar_intencao_zero_shot
 
 def get_video_id():
     try:
@@ -91,7 +88,7 @@ def get_all_comments(video_id, api_key):
                     'text': snippet.get('textDisplay', ''),
                     'likes': snippet.get('likeCount', 0),
                     'published_at': snippet.get('publishedAt', ''),
-                    'felling': classificar_intencao_zero_shot(snippet.get('textDisplay', ''))
+                    'felling': 'neutro'
                 })
 
             next_page_token = response.get('nextPageToken')
