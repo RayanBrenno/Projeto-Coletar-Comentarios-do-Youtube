@@ -1,13 +1,8 @@
 from googleapiclient.discovery import build
-from scriptBancoConexao import gerenciador_video
+from scriptBancoDeDados import gerenciador_video
 
-def get_video_id():
+def get_video_id(url):
     try:
-        url = input("🔗 Digite a URL do vídeo: ").strip()
-        if not url:
-            print("⚠️  URL vazia.")
-            return None
-        
         if "youtube.com/watch?v=" in url:
             video_id = url.split("v=")[1].split("&")[0]
         elif "youtu.be/" in url:
@@ -27,7 +22,8 @@ def get_video_id():
         return None
 
 
-def get_video_info(video_id, api_key):
+def get_video_info(video_id):
+    api_key = 'AIzaSyBC1f-aU5eUNp_Xx1sfVoTOZKnBtm2uKHI' 
     try:
         youtube = build("youtube", "v3", developerKey=api_key)
         request = youtube.videos().list(
@@ -59,7 +55,8 @@ def get_video_info(video_id, api_key):
         return None
 
 
-def get_all_comments(video_id, api_key):
+def get_all_comments(video_id):
+    api_key = 'AIzaSyBC1f-aU5eUNp_Xx1sfVoTOZKnBtm2uKHI' 
     try:
         youtube = build("youtube", "v3", developerKey=api_key)
         comments = []
@@ -101,19 +98,3 @@ def get_all_comments(video_id, api_key):
     except Exception as e:
         print(f"❌ Erro geral ao obter comentários: {e}")
         return []
-
-    
-API_KEY = 'AIzaSyBC1f-aU5eUNp_Xx1sfVoTOZKnBtm2uKHI' 
-
-
-def collectDate():
-    video_id = get_video_id()
-    if not video_id:
-        print("❌ Coleta de dados cancelada devido a erro no ID do vídeo.")
-        return
-    info = get_video_info(video_id, API_KEY)
-    comments = get_all_comments(video_id, API_KEY)
-    gerenciador_video(info, comments)
-    
-    
-collectDate()
