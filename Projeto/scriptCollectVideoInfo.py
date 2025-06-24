@@ -1,41 +1,42 @@
 from googleapiclient.discovery import build
-from scriptBancoDeDados import gerenciador_video
 
-def get_video_id(url):
+
+def get_codeURL(url):
     try:
+        codeURL = ""
         if "youtube.com/watch?v=" in url:
-            video_id = url.split("v=")[1].split("&")[0]
+            codeURL = url.split("v=")[1].split("&")[0]
         elif "youtu.be/" in url:
-            video_id = url.split("/")[-1].split("?")[0]
+            codeURL = url.split("/")[-1].split("?")[0]
         else:
             print("❌ Formato de URL inválido.")
             return None
 
-        if len(video_id) != 11:
+        if len(codeURL) != 11:
             print("❌ ID do vídeo aparentemente inválido.")
             return None
         
-        print(f"✅ ID do vídeo extraído: {video_id}")
-        return video_id
+        print(f"✅ ID do vídeo extraído: {codeURL}")
+        return codeURL
     except Exception as e:
         print(f"⚠️  Erro ao processar a URL: {e}")
         return None
 
 
-def get_video_info(video_id):
+def get_video_info(codeURL):
     api_key = 'AIzaSyBC1f-aU5eUNp_Xx1sfVoTOZKnBtm2uKHI' 
     try:
         youtube = build("youtube", "v3", developerKey=api_key)
         request = youtube.videos().list(
             part='snippet,statistics',
-            id=video_id
+            id=codeURL
         )
         response = request.execute()
 
         if 'items' in response and len(response['items']) > 0:
             video = response['items'][0]
             info = {
-                'idVideo': video_id,
+                'codeURL': codeURL,
                 'title': video['snippet'].get('title', 'Sem título'),
                 'channel': video['snippet'].get('channelTitle', 'Canal desconhecido'),
                 'publish_date': video['snippet'].get('publishedAt', 'Data não disponível'),
@@ -55,7 +56,7 @@ def get_video_info(video_id):
         return None
 
 
-def get_all_comments(video_id):
+def get_all_comments(codeURL):
     api_key = 'AIzaSyBC1f-aU5eUNp_Xx1sfVoTOZKnBtm2uKHI' 
     try:
         youtube = build("youtube", "v3", developerKey=api_key)
@@ -66,7 +67,7 @@ def get_all_comments(video_id):
             try:
                 request = youtube.commentThreads().list(
                     part="snippet",
-                    videoId=video_id,
+                    videoId=codeURL,
                     maxResults=100,
                     pageToken=next_page_token,
                     textFormat="plainText",
@@ -80,7 +81,6 @@ def get_all_comments(video_id):
             for item in response.get('items', []):
                 snippet = item['snippet']['topLevelComment']['snippet']
                 comments.append({
-                    'idVideo': video_id,
                     'author': snippet.get('authorDisplayName', 'Anônimo'),
                     'text': snippet.get('textDisplay', ''),
                     'likes': snippet.get('likeCount', 0),
