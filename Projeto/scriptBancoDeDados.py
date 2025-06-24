@@ -2,31 +2,32 @@ import mysql.connector
 from datetime import datetime
 from tkinter import messagebox
 
+
 def conectar():
     return mysql.connector.connect(
         host="localhost",
-        user="root",            
-        password="12345",       
+        user="root",
+        password="12345",
         database="projetopython"
     )
-    
+
 
 def criar_tabela_videos():
     conn = conectar()
     cursor = conn.cursor()
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS videos (
-    idVideo VARCHAR(255) NOT NULL,
-    idUsuario INT NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    channel VARCHAR(255) NOT NULL,
-    publish_date VARCHAR(255) NOT NULL,
-    views INT DEFAULT 0,
-    likes INT DEFAULT 0,
-    comments INT DEFAULT 0,
-    PRIMARY KEY (idUsuario, idVideo),
-    FOREIGN KEY (idUsuario) REFERENCES usuarios(idUsuario)
-    ON DELETE CASCADE ON UPDATE CASCADE
+        idVideo INT AUTO_INCREMENT PRIMARY KEY,
+        codeURL VARCHAR(11) NOT NULL,
+        idUsuario INT NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        channel VARCHAR(255) NOT NULL,
+        publish_date VARCHAR(255) NOT NULL,
+        views INT DEFAULT 0,
+        likes INT DEFAULT 0,
+        comments INT DEFAULT 0,
+        FOREIGN KEY (idUsuario) REFERENCES usuarios(idUsuario)
+        ON DELETE CASCADE ON UPDATE CASCADE
     )
     """)
     conn.commit()
@@ -40,15 +41,12 @@ def criar_tabelas_comentarios():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS comentarios (
         idComentario INT AUTO_INCREMENT PRIMARY KEY,
-        idVideo VARCHAR(255) NOT NULL,
-        idUsuario INT NOT NULL,
+        idVideo INT NOT NULL,
         author VARCHAR(255) NOT NULL,
         text TEXT NOT NULL,
         likes INT DEFAULT 0,
         published_at VARCHAR(255) NOT NULL,
         felling VARCHAR(255) NOT NULL,
-        FOREIGN KEY (idUsuario) REFERENCES usuarios(idUsuario)  
-        ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (idVideo) REFERENCES videos(idVideo)
         ON DELETE CASCADE ON UPDATE CASCADE
     )
@@ -71,7 +69,7 @@ def criarTabelaUsuarios():
     conn.commit()
     cursor.close()
     conn.close()
-    
+
 
 def criarTabelas():
     criarTabelaUsuarios()
@@ -79,40 +77,41 @@ def criarTabelas():
     criar_tabelas_comentarios()
 
 
-def insert_info(video, idUsuario):
+def insert_info(video_info, idUsuario):
     conn = conectar()
     cursor = conn.cursor()
     sql = """
-    INSERT INTO videos (idVideo, idUsuario, title, channel, publish_date, views, likes, comments)
+    INSERT INTO videos (codeURL, idUsuario, title, channel, publish_date, views, likes, comments)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
     """
     values = (
-        video["idVideo"],
+        video_info["codeURL"],
         idUsuario,
-        video["title"],
-        video["channel"],
-        video["publish_date"],
-        video["views"],
-        video["likes"],
-        video["comments"], 
+        video_info["title"],
+        video_info["channel"],
+        video_info["publish_date"],
+        video_info["views"],
+        video_info["likes"],
+        video_info["comments"],
     )
     cursor.execute(sql, values)
     conn.commit()
+    print(
+        f"✅ Informações do vídeo '{video_info['title']}' inseridas com sucesso.")
     cursor.close()
     conn.close()
-    
-    
-def insert_comments(comments, idUsuario):
+
+
+def insert_comments(comments, idVideo):
     conn = conectar()
     cursor = conn.cursor()
     sql = """
-    INSERT INTO comentarios (idVideo, idUsuario, author, text, likes, published_at, felling)
-    VALUES (%s, %s, %s, %s, %s, %s, %s)
+    INSERT INTO comentarios (idVideo, author, text, likes, published_at, felling)
+    VALUES (%s, %s, %s, %s, %s, %s)
     """
     values = [
         (
-            aux["idVideo"],
-            idUsuario,
+            idVideo,
             aux["author"],
             aux["text"],
             aux["likes"],
@@ -123,57 +122,58 @@ def insert_comments(comments, idUsuario):
     ]
     cursor.executemany(sql, values)
     conn.commit()
+    print(f"✅ {len(values)} comentários inseridos para o vídeo ID {idVideo}.")
     cursor.close()
     conn.close()
-    
-    
-def atualizar_info_video(video, idUsuario):
+
+
+def atualizar_info_video(video_info, idVideo):
     conn = conectar()
     cursor = conn.cursor()
     sql = """
     UPDATE videos
     SET views = %s, likes = %s, comments = %s
-    WHERE idVideo = %s AND idUsuario = %s
+    WHERE idVideo = %s
     """
     values = (
-        video["views"],
-        video["likes"],
-        video["comments"],
-        video["idVideo"],
-        idUsuario
+        video_info["views"],
+        video_info["likes"],
+        video_info["comments"],
+        idVideo
     )
     cursor.execute(sql, values)
     conn.commit()
+    print(f"✅ Informações do vídeo ID {idVideo} atualizadas com sucesso.")
     cursor.close()
     conn.close()
-     
-    
-def atualizar_comentario_video(idVideo, novos_comentarios, idUsuario):
+
+
+def atualizar_comentario_video(comments, idVideo):
     conn = conectar()
     cursor = conn.cursor()
 
     cursor.execute("""
         SELECT published_at FROM comentarios
-        WHERE idVideo = %s AND idUsuario = %s
+        WHERE idVideo = %s
         ORDER BY published_at DESC
         LIMIT 1
-    """, (idVideo, idUsuario))
-    
+    """, (idVideo,))
+
     resultado = cursor.fetchone()
 
     if resultado:
-        ultima_data_banco = datetime.strptime(resultado[0], "%Y-%m-%dT%H:%M:%SZ")
+        ultima_data_banco = datetime.strptime(
+            resultado[0], "%Y-%m-%dT%H:%M:%SZ")
     else:
         ultima_data_banco = None
 
-    comentarios_para_inserir = []
+    new_comments = []
 
-    for c in novos_comentarios:
+    for c in comments:
         data_nova = datetime.strptime(c["published_at"], "%Y-%m-%dT%H:%M:%SZ")
         if ultima_data_banco is None or data_nova > ultima_data_banco:
-            comentarios_para_inserir.append((
-                c["idVideo"],
-                idUsuario,
+            new_comments.append((
+                idVideo,
                 c["author"],
                 c["text"],
                 c["likes"],
@@ -181,59 +181,64 @@ def atualizar_comentario_video(idVideo, novos_comentarios, idUsuario):
                 c["felling"]
             ))
 
-    if comentarios_para_inserir:
+    if new_comments:
         sql = """
-        INSERT INTO comentarios (idVideo, idUsuario, author, text, likes, published_at, felling)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO comentarios (idVideo, author, text, likes, published_at, felling)
+        VALUES (%s, %s, %s, %s, %s, %s)
         """
-        cursor.executemany(sql, comentarios_para_inserir)
+        cursor.executemany(sql, new_comments)
         conn.commit()
-
+    print(
+        f"✅ {len(new_comments)} novos comentários inseridos para o vídeo ID {idVideo}.")
     cursor.close()
     conn.close()
-    
- 
-def verificacao_video_consultado(idVideo, idUsuario):
+
+
+def verificacao_video_consultado(codeURL, idUsuario):
     conn = conectar()
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT 1 FROM videos WHERE idVideo = %s AND idUsuario = %s
-    """, (idVideo, idUsuario))
+        SELECT idVideo FROM videos WHERE codeURL = %s AND idUsuario = %s
+    """, (codeURL, idUsuario))
     resultado = cursor.fetchone()
     cursor.close()
     conn.close()
-    return resultado is not None
- 
-        
-def gerenciador_video(video, comments, idUsuario):
+    return resultado[0] if resultado else None
+
+
+def gerenciador_video(video_info, comments, idUsuario):
     criarTabelas()
-    
-    if verificacao_video_consultado(video["idVideo"], idUsuario):
-        messagebox.showinfo("Informação", f"O vídeo '{video['title']}' já está cadastrado no banco de dados.")
-        atualizar_info_video(video, idUsuario)
-        atualizar_comentario_video(video["idVideo"], comments, idUsuario)
+    idVideo = verificacao_video_consultado(video_info["codeURL"], idUsuario)
+    if idVideo:
+        atualizar_info_video(video_info, idVideo)
+        atualizar_comentario_video(comments, idVideo)
 
     else:
-        print(f"📥 Cadastrando o vídeo '{video['title']}' no banco de dados.")
-        insert_info(video, idUsuario)
-        insert_comments(comments, idUsuario)
-        
-    
+        insert_info(video_info, idUsuario)
+        idVideo = verificacao_video_consultado(
+            video_info["codeURL"], idUsuario)
+        insert_comments(comments, idVideo)
+
+
 def cadastrarUsuario(usuario, senha):
     conn = conectar()
     cursor = conn.cursor()
-    try:
-        cursor.execute("""
+    cursor.execute("""
+            SELECT idUsuario FROM usuarios WHERE usuario = %s
+        """, (usuario,))
+    resultado = cursor.fetchone()
+    if resultado:
+        print(f"❌ O usuário '{usuario}' já existe.")
+        return False
+    cursor.execute("""
         INSERT INTO usuarios (usuario, senha)
         VALUES (%s, %s)
-        """, (usuario, senha))
-        conn.commit()
-        return True
-    except mysql.connector.IntegrityError:
-        return False
-    finally:
-        cursor.close()
-        conn.close()
+    """, (usuario, senha))
+    conn.commit()
+    print(f"✅ Usuário '{usuario}' cadastrado com sucesso.")
+    cursor.close()
+    conn.close()
+    return True
 
 
 def autenticarUser(usuario, senha):
@@ -243,7 +248,11 @@ def autenticarUser(usuario, senha):
         SELECT idUsuario FROM usuarios WHERE usuario = %s AND senha = %s
     """, (usuario, senha))
     resultado = cursor.fetchone()
+    if resultado:
+        print(f"✅ Usuário '{usuario}' autenticado com sucesso.")
+    else:
+        print("❌ Falha na autenticação. Usuário ou senha incorretos.")
     cursor.close()
     conn.close()
-    
+
     return resultado[0] if resultado else None
