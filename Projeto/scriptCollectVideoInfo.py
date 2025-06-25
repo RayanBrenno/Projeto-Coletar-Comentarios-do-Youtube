@@ -1,7 +1,7 @@
 from googleapiclient.discovery import build
 
 
-def extract_video_id(url):
+def get_code_url(url):
     try:
         video_id = ""
         if "youtube.com/watch?v=" in url:
@@ -20,7 +20,7 @@ def extract_video_id(url):
         return None
 
 
-def fetch_video_info(video_id):
+def get_video_info(video_id):
     api_key = 'AIzaSyBC1f-aU5eUNp_Xx1sfVoTOZKnBtm2uKHI'
     try:
         youtube = build("youtube", "v3", developerKey=api_key)
@@ -52,7 +52,7 @@ def fetch_video_info(video_id):
         return None
 
 
-def fetch_all_comments(video_id):
+def get_all_comments(video_id):
     api_key = 'AIzaSyBC1f-aU5eUNp_Xx1sfVoTOZKnBtm2uKHI'
     try:
         youtube = build("youtube", "v3", developerKey=api_key)
