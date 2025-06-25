@@ -72,6 +72,4 @@ Dashboard (avançado): integrar com Power BI, Metabase, ou Gráficos via Plotly
 📌 Entregável: uma forma visual ou interativa de ver os resultados da análise
 
 
-
 CHAVE Ler youtube - AIzaSyBC1f-aU5eUNp_Xx1sfVoTOZKnBtm2uKHI
-LinkVideo - https://www.youtube.com/watch?v=ThjvdPetU8g
