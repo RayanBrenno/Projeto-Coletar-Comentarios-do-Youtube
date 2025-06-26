@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
-from scriptBancoDeDados import *
-from scriptCollectVideoInfo import *
+from script_banco_de_dados import *
+from script_collect_video_info import *
 
 style_text = ("Times New Roman", 13)
 background_color = "#f2f2f2"
