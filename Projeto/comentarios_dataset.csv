@@ -1,0 +1,441 @@
+comentario,sentimento,intencao
+"Muito bom o vídeo, parabéns!",positivo,elogio
+Não entendi nada do que foi explicado,negativo,crítica
+Podia melhorar o áudio,neutro,dica
+Me manda o link por favor?,positivo,pedido
+"Achei meio confuso, esperava mais",neutro,crítica
+"Top demais, continue assim",positivo,elogio
+"Esse conteúdo me salvou, vlw!",positivo,elogio
+"Cara, não gostei da forma que explicou",negativo,crítica
+Faz um vídeo sobre outro assunto também,positivo,pedido
+Melhora a iluminação por favor,neutro,dica
+"Sensacional, muito bom mesmo",positivo,elogio
+"Tá difícil de acompanhar, muito enrolado",negativo,crítica
+Dá pra disponibilizar os slides?,positivo,pedido
+"Achei interessante, mas pode aprofundar",neutro,dica
+Parabéns pelo conteúdo!,positivo,elogio
+Não curti o vídeo,negativo,crítica
+Você podia mostrar mais exemplos,neutro,dica
+Esse vídeo é o melhor que vi sobre o tema,positivo,elogio
+Esperava outro tipo de conteúdo,neutro,outros
+Tem como mandar o código?,positivo,pedido
+A explicação foi rápida demais,negativo,crítica
+"Gostei bastante, bem claro",positivo,elogio
+Me ajuda com esse assunto ainda tenho dúvidas,positivo,pedido
+A abordagem poderia ser diferente,neutro,dica
+Amei! Muito obrigada!,positivo,elogio
+Achei o vídeo fraco,negativo,crítica
+Faz mais vídeos assim,positivo,pedido
+Dá pra fazer com outro exemplo?,positivo,pedido
+"Foi bom, mas enrolou um pouco",neutro,crítica
+"Muito ruim, não explica direito",negativo,crítica
+Esse canal é muito bom,positivo,elogio
+"Ajuda muito, valeu!",positivo,elogio
+"Vídeo básico, mas funcional",neutro,outros
+Tem material de apoio?,positivo,pedido
+Vídeo muito longo,negativo,crítica
+Podia ir mais direto ao ponto,neutro,dica
+"Ficou excelente, continue assim",positivo,elogio
+Muito confuso esse conteúdo,negativo,crítica
+Dá pra legendar os vídeos?,positivo,dica
+"Não gostei, conteúdo mal estruturado",negativo,crítica
+Esse canal merece mais reconhecimento,positivo,elogio
+Explica isso em outro vídeo por favor,positivo,pedido
+"Vídeo bom, mas já conhecia o conteúdo",neutro,outros
+Manda esse PDF aí,positivo,pedido
+Faltou mais prática,neutro,crítica
+Melhora a dicção,neutro,dica
+"Top demais, tô acompanhando sempre",positivo,elogio
+Conteúdo repetido,negativo,crítica
+"Gostei, mas podia ser mais curto",neutro,dica
+"Por sua culpa eu fiquei com vontade de aprender sabosta também ksjdks",positivo,elogio
+"Gostei, mas a explicação podia ser mais lenta pra ficar mais fácil de entender",neutro,dica
+"Muito bom, mas seria legal usar exemplos mais simples",neutro,dica
+"A explicação é boa, só precisa falar um pouco mais devagar",neutro,dica
+"Gostei do conteúdo, mas as transições entre os tópicos ficaram confusas",neutro,dica
+"Legal o vídeo, mas poderia usar termos mais fáceis pra iniciantes",neutro,dica
+"Foi interessante, mas podia ser mais passo a passo",neutro,dica
+"Curti, mas faltou uma introdução mais clara",neutro,dica
+"O conteúdo é útil, mas senti falta de mais exemplos visuais",neutro,dica
+"Gostei, só acho que podia resumir algumas partes repetidas",neutro,dica
+"A explicação foi boa, mas talvez dividir em partes menores ajudasse",neutro,dica
+"Se você se arriscaria aprendendo Assembly, deixe aqui nos comentários",neutro,pedido
+Na matéria de sistemas digitais da faculdade uma das provas literalmente foi fazer uma calculadora kkk,neutro,outros
+"minha namorada faz engenharia de computação, no fim do semestre ela teve que fazer aquele joguinho de batalha naval em assembly.. ela fala que gosta bastante..",positivo,elogio
+"Próximo vídeo, faça uma calculadora usando transistores e conectando-os na energia elétrica.",positivo,pedido
+"Gostei demais, só tenta não esconder os erros e como você fez para resolve-los, gosto de acompanhar o raciocínio que a pessoa teve para encontrar a solução. Parabéns pelo vídeo e a disposição.",positivo,dica
+"Eu aprendi assembly quando me formei em Mecatrônica".,neutro,outros
+"Enquanto isso eu estudando Assembly MIPS 32 Bits pensando 'A que ponto cheguei?'",negativo,crítica
+"Todo programador deveria saber o básico de assembly, especialmente de c/c++, assim aprendem como a memória e processador funcionam.",positivo,dica
+"Slk num compensa",negativo,crítica
+"Uma semana pra fazer uma calculadora kkkkk próximo passo implementar o algoritmo de fibonacci",neutro,outros
+"Muito top o vídeo! Mas para quem deseja começar na programação, não pense em assembly como linguagem, pois não é! A menos que deseje direcionar ponteiros, e lembrar que hardware não é igual em todos os computadores pessoais!",positivo,dica
+"Faz um joguinho tetris",positivo,pedido
+"05:51 -> Eu vi a aba do chatGPT aberta. Usando o chatGPT, qualquer um consegue!",neutro,crítica
+"as vezes em vez de digitar dir, digito dor!!!",neutro,outros
+cd Sofrimento,neutro,outros
+"Inscrita e dado like. Excelente canal, depois tenta compilar o gcc e depois use ele para compilar o kernel do Linux. Kkkkk!",positivo,elogio
+"Também pode gravar um software na fita ou no cartão perfurado. O pessoal antigamente penava. Será se também ganhavam mal como ...",neutro,outros
+"kkkkkkkkkkkkkk q delicia ein meu mano",positivo,elogio
+"Tô cursando Cibersegurança na Puc, e o assembly me fodeu tanto no curso que quase desisti KKKKKKK",negativo,crítica
+"Para programar em Assembly, o pior é sair programando, acaba virando um projeto confuso, cheio de saltos incontroláveis.",negativo,crítica
+"O bom é utilizar boas práticas, por exemplo, os padrões de projeto (GoF extendido), fazendo um núcleo de codigo e blocos específicos.",positivo,dica
+"Na minha graduação da computação, especificamente na disciplina de organização de computadores tive que criar uma lista encadeada ordenada em assembly. Tenho cicatrizes até hoje desta luta kkkk",negativo,crítica
+Assembly é muito bom man,positivo,elogio
+O cara voltou uns 50 anos no passado só para brincar. Eu dei uma estudada em assembly 6502 e cansei!,negativo,crítica
+"Mano,  primeiro video seu que eu vejo você ja trabalha na área? Se sim, como você fez pra conseguir estágio ou coisa do tipo? To cursando ADS e ta foda pra achar um.",neutro,pedido
+"agora faz um renderizador 3d com um editor",positivo,pedido
+"kkkkkkkkk fazer no windows é mo complicação",negativo,crítica
+"q esse dia nunca aconteceu kkkk",neutro,outros
+"é ate estranho ver alguem nao usando chatgpt",neutro,outros
+"KKKKK vídeo dahora",positivo,elogio
+"eu fiz um jogo de batalha naval em assembly tbm  tem video no meu canal",positivo,elogio
+"você poderia ter usado a extensão MASM/TASM do vscode  qnd eu tava fznd assembly na faculdade eu usei essa extensão e ela era mt boa",positivo,dica
+"Eu sendo um mero iniciante no mundo da programação, tentando compreender esse aerógrafos (linguagem java). Eu estou aprendendo a programar no python kkkkkkkkkkkkkkkkkkkkkkkkkkk",neutro,outros
+"O cara conseguiu me estressar da casa dele",negativo,crítica
+"PHP agora?",neutro,outros
+"Tenho medo de java mais queria aprender",neutro,pedido
+"Eu tenho o pacote do intelij, muito bom mesmo",positivo,elogio
+"Eu amo Java, eu sou javeiro ❤❤❤",positivo,elogio
+"ele trocou o odeio java para não odeio o java kkkkk",positivo,elogio
+"Eu aprendi Java usando Linux no pendrive...",neutro,dica
+"Java nem é tudo isso mano",negativo,crítica
+"2:43 muito bom 😅",positivo,elogio
+"faz um vídeo fazendo um jogo simples em python",positivo,pedido
+"java é do santanas",neutro,outros
+"Mano o java lembra muito c#",neutro,outros
+"Se não tá dando erro é pq tem algo errado kkkk",neutro,dica
+"Achava minha irmã mais velha java era rabugenta...",positivo,elogio
+"Blz agr faz o minecraft 2",positivo,pedido
+"Na realidade, Python é fortemente tipado também...",positivo,dica
+"hoje todo mundo é programador, é só decorar o código",neutro,crítica
+"Eu como usuário de python entendo como é difícil trocar de linguagem",positivo,dica
+"agr 'não odeio java' kkkkkk",positivo,elogio
+"curso técnico, tô na parte de threads...",neutro,crítica
+"quando migra de python pra java vê a diferença",neutro,dica
+"Que extensão é essa que você usa no vídeo?",positivo,pedido
+"Bomdemaise",positivo,elogio
+"Python me ajudou com lógica, mas Java me deu manias",neutro,dica
+"Teve os mesmos problemas que eu ao baixar o JDK",positivo,elogio
+"Estou tentando aprender a linguagem mais cabaço possível 'Lua'",neutro,outros
+"Java é tranquilo no básico, mas avança e fica difícil",neutro,dica
+"Gostei do canal, quero aprender, mas tenho preguiça",positivo,elogio
+"Gostei da linguagem, mas continuo odiando",neutro,crítica
+"Li o título e vim dar risada",positivo,elogio
+O barulho do choque com o chidori  kkkkkkkkk,positivo,elogio
+Ramon virando um nordestino a cada risada kkkkk,positivo,elogio
+19:26,neutro,outros
+Pelo amor de Deus chamem o Felca mais vezes!!! Kkkkk,positivo,pedido
+"No 28:50, todo mundo se cheirando pra fazer a publi e o Chico sem entender, mostrando os músculos hahahahha eu ri muito hahahaha",positivo,elogio
+"Que vídeo topppp, Felca é incrível",positivo,elogio
+O som do choque sendo o som do Chidori kkkkkkkk,positivo,elogio
+esse quadro deveria ser maior,positivo,dica
+outro vídeo desse por favor 🫡,positivo,pedido
+"Quero um quadro fixo, muito bom 😂",positivo,pedido
+O melhor vídeo até agr hahahaaahaha,positivo,elogio
+Muito booooooommmm hahahaha,positivo,elogio
+"certeza que um dos melhores videos do canal, que ideia genial",positivo,elogio
+Como que o Ramon nunca namorou cara?,neutro,outros
+amo quando colocam a cabeçona no Ramon  quando ele dá risada kkkkk,positivo,elogio
+Muito bom! Traga mais vezes essa do choque 😂😂😂,positivo,pedido
+"Mais vídeos como esse, por favor kkkkkkkkk",positivo,pedido
+"esse vídeo foi absurdo, com o felca ainda interpretando esse doido que ele é não tem outra pessoa na internet melhor que ele pra isso kkkk",positivo,elogio
+Belt estragou o entretenimento na hora do chico falar a história da traição,negativo,crítica
+A cara de satisfação do Felca dando choque nos meninos 😂😂😂😂😂😂,positivo,elogio
+petição pra tirar o advogado do chico kkkk,neutro,pedido
+esse e de longe o video que eu mais ri,positivo,elogio
+no mínimo suspeito o Marciel ter namorado 4 ou 5 vezes antes e na pergunta se já traiu terem cortado a fala dele 👀,neutro,crítica
+“você já traiu” foi sacanagem KAKAKAKAKAKAKAKAKAKAKAKKAKAKKAKAKAKA,positivo,elogio
+Amo vcs manoooooooo 😂,positivo,elogio
+impressionante o que o Maciel é certinho cara kkkkkk,positivo,elogio
+um dos melhores videos,positivo,elogio
+Passando mal de rir 😅😅😅😅,positivo,elogio
+"""Se vc tá mentindo, dá uma risadinha"" eu claramente riria tbm",positivo,elogio
+"Eles perdendo o carisma durante  o vídeo  😂😂😂😂 Felca se deliciando, façam  mais vídeos com consequências",positivo,pedido
+Eu passei mal quando o Felca deu o segundo choque no PIG kkkkkkkkkkkkkk,positivo,elogio
+nao tankei o felca cantando no inicio kkkkkkkkkkkkkkkkkkkkkkkkk,positivo,elogio
+1:54 KKKKKKKKKKKKKKKKKKKKKKKKKK vtnc impossivel q esse video seja real. O barulhinho me quebrou muito. Esse editor é fenomenal,positivo,elogio
+KKKKKKKKKKKKKKKKKKKKKKKKKKKKK,positivo,elogio
+o Felca é o grande sucesso da Internet atual... Esse vídeo foi muito bom!!!,positivo,elogio
+Ta geral vestido de Maciel mané,neutro,outros
+O felca tem que ser o operador oficial do choque desse canal,positivo,pedido
+Eu acho que eles ficaram cm medo real do Felca 😂😂😂,positivo,elogio
+Que junção maravilhosa ❤❤❤,positivo,elogio
+"O Experimento de Milgran, versão Felca",positivo,elogio
+Gente eles votando que o Chico estava mentindo...,neutro,crítica
+beltrão chato pra cacete,negativo,crítica
+Foi muito bommmmm!!!,positivo,elogio
+Chico vai ser jardineiro hahahah que bota meu amigo,positivo,elogio
+Beltrão é chato pra cacete como pode?!?!,negativo,crítica
+Felca detectando mentiras... Parece hipocrisia!,negativo,crítica
+20:10 explicou as minhas inquietações 😂😂,positivo,elogio
+aqueles caras sendo o nosso pânico family friend seria maluquicekkkkkkkkk,positivo,elogio
+Um dos melhores vídeos 😂,positivo,elogio
+Por mais que eu entenda o entretenimento da traição...,neutro,dica
+Eu e Ramon temos algo em comum,neutro,outros
+até eu tomei susto no choque do Felca kkkkkkk,positivo,elogio
+Faltou a vinheta do Beltrão 😂😂,positivo,dica
+Tragam o felca mais vezessss,positivo,pedido
+O maciel: se me atacar eu vou atacar,positivo,elogio
+"Que vídeo bom cara, tragam o deixa mais vezes 🤣🤣",positivo,pedido
+Mn vcs tem q fazer um vídeo com o loud coringa,positivo,pedido
+Segundo estudos avançadíssimos do Instituto Federal de Suor Agudo...,positivo,elogio
+A sociologia também estuda como o tempo influencia a forma como vivemos em sociedade.,neutro,outros
+O que a sociologia estuda? ➡️ A sociologia estuda a sociedade...,neutro,outros
+"Eu amei esse vídeo hahahaha por favor, Felca, de mais choque neles 🙏🏻🙏🏻🙏🏻",positivo,pedido
+Eu amo o Felca! Maravilhoso demais 😂😂,positivo,elogio
+"Tutorial é muito chato às vezes, e vc acaba deixando o aprendizado muito mais leve...",positivo,elogio
+13:50 dá para usar lambda para fazer isso em uma linha só,neutro,dica
+"Tô na mesma amigo, sofrendo para entender collections",neutro,outros
+"Se não for de muito incomodo ao Lord, poderias fazer um video ensinado Java ou C#",positivo,pedido
+"0:16 não fale mal dos fãns de java, somos apenas 0 😠",neutro,outros
+"Qualquer erro seu programando em Java não é culpa sua, é culpa do Java.",negativo,crítica
+agora aprende progamar em C,positivo,pedido
+agr faz um mod do minecraft,positivo,pedido
+"Para alguém que nunca programou em java, foi bem bom. Alguns adendos...",positivo,dica
+Dude I don't even know Portuguese (only english and spanish) but still nice video ❤,positivo,elogio
+😂,positivo,elogio
+"Fala mais devagar mano kkkkkk, video mt bom.",positivo,dica
+2:56 silêncio o programador python está descobrindo o ;,positivo,elogio
+Mas a joana devolveu a sua kasa?,neutro,outros
+oxekkkkkkkkk o cara criou um Array e disse que era listakkkk,neutro,crítica
+Eu sou Java script user,neutro,outros
+"Pra quem Ama Java, parabéns por amar um produto de 30 anos...",negativo,crítica
+mn tmnc eu vi esse video no começo de mês... finalmente achei,positivo,elogio
+"te convido a vir conhecer o Rust, e conhecer a verdadeira dor",neutro,dica
+"Blz, agora mete um SpringBoot e um banco de dados pra gente ver um negócio...",positivo,pedido
+Parabéns pelo vídeo parceiro ! Muito bom.,positivo,elogio
+CARA SEU VIDEO APARECEU DO NADA E EU JA AMEI SEU ESTILO DE EDIÇÃO,positivo,elogio
+Melhor canal ❤,positivo,elogio
+Lan Code vc vai limpar a imagem do Java. Viva Lan code!!!🎉🎉🎉🎉🎉,positivo,elogio
+"AÍ SIM, MEU MANO PREFEITO DE BH!!! TE AMO, MLK CABULOSO❤❤",positivo,elogio
+Quando comecei a programar eu usava o bloco de notas😂,positivo,elogio
+Para que eu vou trabalhar com Java em pleno 2025...,neutro,crítica
+"Java lembra muito c#, do que vc mostro no vídeo pelo menos",neutro,dica
+"Eu sendo um mero iniciante no mundo da programação, tentando compreender esse aerógrafos...",neutro,outros
+O cara conseguiu me estressar da casa dele - 13:10,negativo,crítica
+PHP agora?,neutro,outros
+"Ganks anos melhores que o Shini, os cadas viaja 😊",neutro,crítica
+MINERVA E AQUELE COLABORADOR QUE DA MAIS PREJUÍZO...,negativo,crítica
+Nossa eles ficam especulando tanta coisa sobre o Jerry...,neutro,dica
+"O grev não aguenta zoeira, streamer não dá pra ser kkk 😂",positivo,elogio
+Mireu vai sofrer com esse vivo keyd... o adc deles é normalzinho!,neutro,crítica
+Esa é o cara mais criminoso do cenário...,positivo,elogio
+"Absolut tá entendendo, as narrativas fazem parte do cenário...",positivo,dica
+Absolute é único que chega a falar a true sobre o mortheus...,positivo,elogio
+Atitude braba do tay,positivo,elogio
+Não acompanhava o Absolut... Absolut é o famoso sonso...,negativo,crítica
+O minerva é muito safado cara...,positivo,elogio
+Loud n aceita q tomou pixdiff KKKKKKKKK,positivo,elogio
+vks brance ia ser pauleira tambm,neutro,outros
+Tay é idolo ja. O cara dá a vida em tudo que faz,positivo,elogio
+tayzao god seloko,positivo,elogio
+"Nosso cenário é vergonhoso, tudo pelo conteúdo...",negativo,crítica
+carai desliguei o adblock... e tomei anuncio de 2 minutos,negativo,crítica
+O Tay é mt esforçado pqp...,positivo,elogio
+KKKKKKKKKKKKKKKKKKKKKKKKK o grev,positivo,elogio
+O Grev não ser um dos principais nomes sendo buscados...,positivo,dica
+"Ahhh fala sério, dizer que a culpa da Loud... não foi do Shini...",negativo,crítica
+Avááá que o Dynquedo tá falando a favor da Keyd kkkkkk,positivo,elogio
+"Mas o Esa não pensa, né? Beleza que o minerva foi carregado...",negativo,crítica
+"Ansioso pelo próximo split, se esse foi de 2 times só...",positivo,dica
+Saudades de quando dynkedo era proplayer...,negativo,crítica
+"Só não pagar, o cara ta indo duo e ganhando coach...",negativo,crítica
+"carai, esinha vai rachar o elenco kkkkkk",positivo,elogio
+A LOUD manter esse sephis como único STAFF depois de todo esse tempo é BIZARRO,negativo,crítica
+o mortheus é horrível jogando,negativo,crítica
+muito ruim esse cara,negativo,crítica
+ele só faz merda em todos os jogos,negativo,crítica
+impressionante como joga mal,negativo,crítica
+nem com 10 coaches esse cara aprende,negativo,crítica
+toda partida ele entrega tudo,negativo,crítica
+não sei como ainda colocam esse cara pra jogar,negativo,crítica
+o pior jogador da line é ele,negativo,crítica
+foi por culpa dele que perderam,negativo,crítica
+inacreditável o quanto esse cara fede,negativo,crítica
+de longe o mais fraco do time,negativo,crítica
+ele parece que desaprendeu a jogar,negativo,crítica
+não tem como defender esse cara,negativo,crítica
+mortheus tá sendo um peso morto,negativo,crítica
+de novo ele afundando o time,negativo,crítica
+não sei o que esse cara ainda tá fazendo aí,negativo,crítica
+"horrível, só sabe feedar",negativo,crítica
+"ele é péssimo, sempre é o pior em campo",negativo,crítica
+mortheus não acerta uma jogada,negativo,crítica
+se tirar ele o time melhora 100%,negativo,crítica
+"mortheus é um peso morto, só atrapalha",negativo,crítica
+"caramba amassarma, top dms",positivo,elogio
+"muito bom, gostei",positivo,elogio
+"show de bola, continue assim",positivo,elogio
+"excelente trabalho, parabéns",positivo,elogio
+"muito interessante, aprendi bastante",positivo,elogio
+"ótimo conteúdo, muito bem explicado",positivo,elogio
+"adorei, muito útil",positivo,elogio
+"muito bem feito, continue assim",positivo,elogio
+"muito bom, me ajudou bastante",positivo,elogio
+"excelente, muito bem estruturado",positivo,elogio
+"muito interessante, gostei muito",positivo,elogio
+"ótimo trabalho, continue assim",positivo,elogio
+"muito bem explicado, aprendi bastante",positivo,elogio
+"adorei, muito útil",positivo,elogio
+"muito bom, me ajudou bastante",positivo,elogio
+"excelente, muito bem estruturado",positivo,elogio
+"muito interessante, gostei muito",positivo,elogio
+"ótimo trabalho, continue assim",positivo,elogio
+"muito bem explicado, aprendi bastante",positivo,elogio
+"adorei, muito útil",positivo,elogio
+"muito bom, me ajudou bastante",positivo,elogio
+"excelente, muito bem estruturado",positivo,elogio
+"muito interessante, gostei muito",positivo,elogio
+"ótimo trabalho, continue assim",positivo,elogio
+"muito bem explicado, aprendi bastante",positivo,elogio
+"adorei, muito útil",positivo,elogio
+"muito bom, me ajudou bastante",positivo,elogio
+"gostei, mas da faz os exemplos mais devagar",neutro,dica
+"muito bom, mas poderia ter mais exemplos práticos",neutro,dica
+"excelente, mas acho que poderia ser mais curto",neutro,dica
+"muito interessante, mas poderia ter mais detalhes técnicos",neutro,dica
+"ótimo trabalho, mas acho que poderia ser mais dinâmico",neutro,dica
+"muito bem explicado, mas poderia ter mais gráficos",neutro,dica
+"adorei, mas acho que poderia ter mais animações",neutro,dica
+"muito bom, mas poderia ter mais exemplos de código",neutro,dica
+"excelente, mas acho que poderia ter mais interatividade",neutro,dica
+"muito interessante, mas poderia ter mais estudos de caso",neutro,dica
+"ótimo trabalho, mas acho que poderia ter mais exercícios práticos",neutro,dica
+"muito bem explicado, mas poderia ter mais recursos visuais",neutro,dica
+"adorei, mas acho que poderia ter mais discussões em grupo",neutro,dica
+"muito bom, mas poderia ter mais exemplos de aplicações reais",neutro,dica
+"excelente, mas acho que poderia ter mais vídeos complementares",neutro,dica
+"muito interessante, mas poderia ter mais leituras recomendadas",neutro,dica
+"ótimo trabalho, mas acho que poderia ter mais quizzes",neutro,dica
+"muito bem explicado, mas poderia ter mais fóruns de discussão",neutro,dica
+"faz sobre ia",positivo,pedido
+"faz sobre python",positivo,pedido
+"faz sobre javascript",positivo,pedido
+"faz sobre c++",positivo,pedido
+"faz sobre java",positivo,pedido
+"faz com mais detalhes sobre o assunto",positivo,pedido
+"faz com mais exemplos práticos",positivo,pedido
+"faz mais vezes com ele tlg",positivo,pedido
+"faz com mais animações",positivo,pedido
+"faz com mais gráficos",positivo,pedido
+"faz com mais interatividade",positivo,pedido
+"faz com mais estudos de caso",positivo,pedido
+"faz com mais exercícios práticos",positivo,pedido
+"Explica pior que meu professor de física.",negativo,crítica
+"Mais enrolado que novela mexicana.",negativo,crítica
+"Esse conteúdo é mais confuso que tutorial antigo no YouTube.",negativo,crítica
+"Essa explicação me deu mais dúvidas do que soluções.",negativo,crítica
+"Pensei que seria bom, mas é tão útil quanto um manual em japonês.",negativo,crítica
+"Vídeo mais perdido que eu na faculdade.",negativo,crítica
+"Mais difícil de acompanhar que série sem legenda.",negativo,crítica
+"Essa aula me lembrou por que larguei engenharia.",negativo,crítica
+"Tá mais complicado que declaração de imposto de renda.",negativo,crítica
+"Mais travado que minha internet com 1 mega.",negativo,crítica
+"Já vi planilha explicar melhor que isso.",negativo,crítica
+"Mais inútil que botão de fechar propaganda.",negativo,crítica
+"Esse vídeo é o equivalente digital de andar em círculos.",negativo,crítica
+"Mais confuso que instrução de IKEA sem figura.",negativo,crítica
+"Parece que o vídeo foi feito só pra confundir mesmo.",negativo,crítica
+"Já vi gente bêbada explicar melhor que isso.",negativo,crítica
+"Mais enrolado que meu fone de ouvido no bolso.",negativo,crítica
+"Tá mais difícil de entender que letra de médico.",negativo,crítica
+"Mais difícil de entender que letra de professor de matemática.",negativo,crítica
+"Será que fui eu que perdi alguma parte ou o vídeo que não explicou?",negativo,crítica
+"Explicou onde? Porque aqui eu só ouvi palavras soltas.",negativo,crítica
+"Isso faz sentido pra alguém?",negativo,crítica
+"O vídeo acabou e eu continuo sem saber nada. Isso é normal?",negativo,crítica
+"É impressão minha ou faltou metade da explicação?",negativo,crítica
+"Era pra ser tutorial ou pegadinha?",negativo,crítica
+"Como é que isso ajuda alguém a aprender?",negativo,crítica
+"Será que é assim que ensina hoje em dia?",negativo,crítica
+"A explicação tava no vídeo mesmo ou era pra adivinhar?",negativo,crítica
+"Quem mais achou que o vídeo pulou uma parte importante?",negativo,crítica
+"É sério que isso é o vídeo completo?",negativo,crítica
+"Me perdi no primeiro minuto. É só comigo?",negativo,crítica
+"Isso é aula ou monólogo desconexo?",negativo,crítica
+"Era só seguir o vídeo e aprender? Fácil né…",negativo,crítica
+"É pedir muito uma explicação passo a passo?",negativo,crítica
+"Será que nem um exemplo claro dava pra colocar?",negativo,crítica
+"Tem alguma parte útil que eu deixei passar?",negativo,crítica
+"O conteúdo está bom, mas seria interessante revisar a ordem dos tópicos.",neutro,crítica
+"Achei útil, porém a explicação ficou um pouco corrida em alguns momentos.",neutro,crítica
+"O vídeo está legal, só acho que alguns termos poderiam ser explicados com mais calma.",neutro,crítica
+"A proposta é boa, só sugiro tentar simplificar os exemplos.",neutro,crítica
+"Gostei do vídeo, mas a falta de organização em tópicos atrapalhou um pouco.",neutro,crítica
+"O assunto é interessante, mas seria melhor se houvesse uma recapitulação ao final.",neutro,crítica
+"Achei bem útil, só acho que seria bom incluir uma seção de dúvidas frequentes.",neutro,crítica
+"Está no caminho certo, apenas recomendo revisar alguns conceitos que passaram rápido.",neutro,crítica
+"Eu também já tive que programar em assembly na faculdade.",neutro,outros
+"Esse vídeo me lembrou da época que eu programava no bloco de notas.",neutro,outros
+"Meu professor faria isso de um jeito totalmente diferente.",neutro,outros
+"Estava vendo isso de madrugada e rindo sozinho kkkkk",neutro,outros
+"Passei por isso semana passada na aula de lógica.",neutro,outros
+"Esse vídeo apareceu bem quando eu precisava procrastinar kkk",neutro,outros
+"Isso me lembrou do meu TCC, que trauma!",neutro,outros
+"Nem sei como vim parar aqui, mas tô curtindo.",neutro,outros
+"Quando vi esse código, pensei que era um enigma.",neutro,outros
+"Meu cérebro fritou só de olhar isso kkkk",neutro,outros
+"Isso aqui parece coisa de outro mundo.",neutro,outros
+"Isso é tipo mágica negra da programação kkk",neutro,outros
+"Só entrei pra ver os comentários mesmo kkkkk",neutro,outros
+"Me identifiquei demais com esse momento.",neutro,outros
+"Esse vídeo tá rolando no grupo da minha turma agora kkk",neutro,outros
+"Não sei se entendi, mas tô comendo uma pipoca assistindo.",neutro,outros
+"Olhei e pensei: é agora que desisto do curso.",neutro,outros
+"Eu vendo isso e lembrando que tenho prova amanhã.",neutro,outros
+"Isso me lembrou de quando formatei o PC e perdi tudo.",neutro,outros
+"Não entendi nada, mas tô achando divertido.",neutro,outros
+"Tem como disponibilizar o código?",neutro,pedido
+"Coloca os links dos materiais na descrição?",neutro,pedido
+"Poderia deixar o repositório no GitHub?",neutro,pedido
+"Faz um resumo escrito pra gente acompanhar?",neutro,pedido
+"Dá pra colocar legenda automática?",neutro,pedido
+"Poderia deixar o passo a passo nos comentários?",neutro,pedido
+"Tem como deixar um PDF com os slides?",neutro,pedido
+"Coloca o nome da música de fundo aí por favor.",neutro,pedido
+"Tem planilha disso que você mostrou?",neutro,pedido
+"Faz um shorts com a parte principal?",neutro,pedido
+"Seria legal um material complementar disso.",neutro,pedido
+"Consegue mostrar esse exemplo com outra linguagem?",neutro,pedido
+"Poderia colocar os comandos no comentário fixado?",neutro,pedido
+"Me marca quando fizer outro vídeo como esse.",neutro,pedido
+"Tem grupo no Discord pra acompanhar as aulas?",neutro,pedido
+"Dá pra explicar esse trecho de forma mais detalhada depois?",neutro,pedido
+"Você pode colocar os exemplos para copiar e colar?",neutro,pedido
+"Tem como indicar um livro pra estudar isso?",neutro,pedido
+"Me avisa quando sair a continuação desse conteúdo.",neutro,pedido
+"Tem como colocar timestamp pras partes importantes?",neutro,pedido
+"Faz um vídeo só com dicas práticas sobre isso.",neutro,pedido
+"Você pode fazer um vídeo sobre os erros mais comuns?",neutro,pedido
+"Coloca um link para baixar o material de apoio?",neutro,pedido
+"Faz um vídeo explicando como configurar o ambiente de desenvolvimento.",neutro,pedido
+"Você pode fazer um vídeo sobre boas práticas nessa linguagem?",neutro,pedido
+"Tem como fazer um vídeo sobre debugging nessa linguagem?",neutro,pedido
+"Faz um vídeo sobre como otimizar o código nessa linguagem.",neutro,pedido
+"Você pode fazer um vídeo sobre as diferenças entre essa linguagem e outras?",neutro,pedido
+"Coloca um link para o repositório do projeto no GitHub?",neutro,pedido
+"Faz um vídeo sobre como integrar essa linguagem com banco de dados.",neutro,pedido
+"Você pode fazer um vídeo sobre como criar uma API nessa linguagem?",neutro,pedido
+"Tem como fazer um vídeo sobre testes automatizados nessa linguagem?",neutro,pedido
+"Faz um vídeo sobre como trabalhar com frameworks nessa linguagem.",neutro,pedido
+"Gostei, mas poderia falar um pouco mais devagar.",positivo,crítica
+"Muito bom, só acho que faltaram exemplos práticos.",positivo,crítica
+"O vídeo está ótimo, mas ficou meio corrido no final.",positivo,crítica
+"Adorei o conteúdo, só senti falta de um resumo no fim.",positivo,crítica
+"Excelente explicação, mas o áudio ficou baixo.",positivo,crítica
+"Parabéns, só toma cuidado com os cortes rápidos.",positivo,crítica
+"Gostei bastante, mas acho que dava pra simplificar mais.",positivo,crítica
+"Ótimo trabalho, só não curti muito a edição agitada.",positivo,crítica
+"Curti, mas faltou mostrar como aplicar isso na prática.",positivo,crítica
+"Mandou bem, mas o início ficou um pouco confuso.",positivo,crítica
+"Foi muito bom, só que os exemplos foram repetitivos.",positivo,crítica
+"Bem didático, mas talvez menos texto na tela ajude.",positivo,crítica
+"Top demais! Mas os comentários no código estavam confusos.",positivo,crítica
+"Muito bom, mas podia ter usado uma linguagem mais acessível.",positivo,crítica
+"Gostei, mas a explicação do segundo tópico foi meio rápida.",positivo,crítica
+"Conteúdo excelente, mas a qualidade do vídeo oscilou um pouco.",positivo,crítica
+"Adorei, só achei que pulou etapas importantes no exemplo.",positivo,crítica
+"Ótimo vídeo, só que ficou meio repetitivo em alguns pontos.",positivo,crítica
+"Parabéns, mas às vezes a voz some um pouco.",positivo,crítica
+"Vídeo ótimo! Só melhora a iluminação na próxima.",positivo,crítica

@@ -60,7 +60,8 @@ def create_comments_table():
         text TEXT NOT NULL,
         likes INT DEFAULT 0,
         published_at VARCHAR(255) NOT NULL,
-        feeling VARCHAR(255) NOT NULL,
+        sentiment VARCHAR(255) NOT NULL,
+        intention VARCHAR(255) NOT NULL,
         FOREIGN KEY (video_id) REFERENCES videos(video_id)
         ON DELETE CASCADE ON UPDATE CASCADE
     )
@@ -103,8 +104,8 @@ def insert_comments(comments, video_id):
     conn = connect()
     cursor = conn.cursor()
     sql = """
-    INSERT INTO comments (video_id, author, text, likes, published_at, feeling)
-    VALUES (%s, %s, %s, %s, %s, %s)
+    INSERT INTO comments (video_id, author, text, likes, published_at, sentiment, intention)
+    VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
     values = [
         (
@@ -113,7 +114,8 @@ def insert_comments(comments, video_id):
             comment["text"],
             comment["likes"],
             comment["published_at"],
-            comment["felling"]
+            comment["sentiment"],
+            comment["intention"]
         ) for comment in comments
     ]
     cursor.executemany(sql, values)
@@ -168,13 +170,14 @@ def update_video_comments(comments, video_id):
                 c["text"],
                 c["likes"],
                 c["published_at"],
-                c["felling"]
+                c["sentiment"],
+                c["intention"]
             ))
 
     if new_comments:
         sql = """
-        INSERT INTO comments (video_id, author, text, likes, published_at, feeling)
-        VALUES (%s, %s, %s, %s, %s, %s)
+        INSERT INTO comments (video_id, author, text, likes, published_at, sentiment, intention)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
         cursor.executemany(sql, new_comments)
         conn.commit()
