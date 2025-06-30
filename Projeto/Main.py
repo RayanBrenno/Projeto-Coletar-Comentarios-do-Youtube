@@ -1,4 +1,3 @@
-from script_front import open_login_window
 import subprocess
 import sys
 import os
@@ -17,6 +16,7 @@ instalar_dependencias()
 
 # Aqui segue seu código principal
 print("✅ Ambiente pronto para rodar o código!")
+from script_front import open_login_window
 
 
 open_login_window()
