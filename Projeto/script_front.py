@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from script_banco_de_dados import *
+from script_banco_de_dados2 import *
 from script_collect_video_info import *
 
 style_text = ("Times New Roman", 13)
@@ -160,7 +160,8 @@ def open_url_window(user_id):
             videos_consulted = take_videos_by_user(user_id)
             for video in videos_consulted:
                 if video["codeURL"] == code_url:
-                    messagebox.showwarning("Warning", "This video has already been analyzed, the video will be updated.")
+                    messagebox.showwarning(
+                        "Warning", "This video has already been analyzed, the video will be updated.")
                     url_window.destroy()
                     open_update_video_window(user_id, video)
                     return
@@ -270,7 +271,7 @@ def open_select_update_video_window(user_id):
             return
         current_info = None
         for video in videos:
-            if video['idVideo'] == int(video_id):
+            if video['idVideo'] == video_id:
                 current_info = video
                 break
         window.destroy()
