@@ -2,14 +2,18 @@ from pymongo import MongoClient, errors
 from datetime import datetime
 
 # Conexão com MongoDB Atlas
-client = MongoClient("mongodb+srv://RayanBrenno:rayan123@rayan.e8buede.mongodb.net/")
+client = MongoClient(
+    "mongodb+srv://RayanBrenno:rayan123@rayan.e8buede.mongodb.net/")
 db = client["projetopython"]
 
 # === USERS ===
+
+
 def create_users_collection():
     if "users" not in db.list_collection_names():
         db.create_collection("users")
         db["users"].create_index("username", unique=True)
+
 
 def register_user(username, password):
     try:
@@ -18,11 +22,14 @@ def register_user(username, password):
     except errors.DuplicateKeyError:
         return False
 
+
 def authenticate_user(username, password):
     user = db["users"].find_one({"username": username, "password": password})
     return str(user["_id"]) if user else None
 
 # === VIDEOS ===
+
+
 def insert_video_info(video_info, user_id):
     video = {
         "code_url": video_info["codeURL"],
@@ -36,9 +43,11 @@ def insert_video_info(video_info, user_id):
     }
     db["videos"].insert_one(video)
 
+
 def get_video_id_if_exists(code_url, user_id):
     video = db["videos"].find_one({"code_url": code_url, "user_id": user_id})
     return str(video["_id"]) if video else None
+
 
 def update_video_info(video_info, video_id):
     from bson import ObjectId
@@ -50,6 +59,7 @@ def update_video_info(video_info, video_id):
             "comments": video_info["comments"]
         }}
     )
+
 
 def take_videos_by_user(user_id):
     videos = db["videos"].find({"user_id": user_id})
@@ -66,21 +76,27 @@ def take_videos_by_user(user_id):
     } for v in videos]
 
 # === COMMENTS ===
+
+
 def insert_comments(comments, video_id):
     for comment in comments:
         comment["video_id"] = video_id
     if comments:
         db["comments"].insert_many(comments)
 
+
 def update_video_comments(comments, video_id):
-    last_comment = db["comments"].find({"video_id": video_id}).sort("published_at", -1).limit(1)
+    last_comment = db["comments"].find(
+        {"video_id": video_id}).sort("published_at", -1).limit(1)
     latest_date = None
     for c in last_comment:
-        latest_date = datetime.strptime(c["published_at"], "%Y-%m-%dT%H:%M:%SZ")
+        latest_date = datetime.strptime(
+            c["published_at"], "%Y-%m-%dT%H:%M:%SZ")
 
     new_comments = []
     for c in comments:
-        comment_date = datetime.strptime(c["published_at"], "%Y-%m-%dT%H:%M:%SZ")
+        comment_date = datetime.strptime(
+            c["published_at"], "%Y-%m-%dT%H:%M:%SZ")
         if latest_date is None or comment_date > latest_date:
             c["video_id"] = video_id
             new_comments.append(c)
@@ -88,7 +104,10 @@ def update_video_comments(comments, video_id):
     if new_comments:
         db["comments"].insert_many(new_comments)
 
+
 # === GESTÃO COMPLETA ===
+
+
 def video_manager(video_info, comments, user_id):
     video_id = get_video_id_if_exists(video_info["codeURL"], user_id)
     if video_id:
