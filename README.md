@@ -21,6 +21,6 @@ Este projeto tem como objetivo **coletar, armazenar e visualizar comentários de
 - **Tkinter** – interface gráfica
 - **Pymongo** – conexão com o MongoDB
 - **MongoDB Atlas** – banco de dados em nuvem
-- **Google API / scraping de comentários**
+- **Google API - coletar comentários e informações do vídeo**
 
 ---
