@@ -1,5 +1,0 @@
-pandas
-scikit-learn
-pymongo
-joblib
-google-api-python-client
