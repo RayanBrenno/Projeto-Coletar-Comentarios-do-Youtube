@@ -7,7 +7,7 @@ Este projeto tem como objetivo **coletar, armazenar e visualizar comentários de
 ## 🚀 Funcionalidades
 
 - ✅ Cadastro e login de usuários
-- 🔍 Pesquisa de vídeos do YouTube por URL (ou código do vídeo)
+- 🔍 Pesquisa de vídeos do YouTube por URL 
 - 💬 Coleta automática de comentários e metadados
 - 🗂 Armazenamento em banco de dados MongoDB Atlas
 - 📊 Atualização de dados dos vídeos e comentários
@@ -21,6 +21,6 @@ Este projeto tem como objetivo **coletar, armazenar e visualizar comentários de
 - **Tkinter** – interface gráfica
 - **Pymongo** – conexão com o MongoDB
 - **MongoDB Atlas** – banco de dados em nuvem
-- (opcional) **Google API / scraping de comentários**
+- **Google API / scraping de comentários**
 
 ---
