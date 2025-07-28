@@ -1,6 +1,5 @@
 from googleapiclient.discovery import build
-import joblib
-
+import random
 
 def get_code_url(url):
     try:
@@ -54,16 +53,9 @@ def get_video_info(video_id):
 
 
 def get_all_comments(video_id):
-    #sentiment_model = joblib.load("Projeto/modelosIA/modelo_sentimento.pkl")
-    #intention_model = joblib.load("Projeto/modelosIA/modelo_intencao.pkl")
-    #vectorizer = joblib.load("Projeto/modelosIA/vetor_tfidf.pkl")
-
-    #def classify_comment(text):
-    #    vec = vectorizer.transform([text])
-    #    sentiment = sentiment_model.predict(vec)[0]
-    #    intention = intention_model.predict(vec)[0]
-    #    return sentiment, intention
-
+    sentiments = ["positivo", "negativo", "neutro"]
+    intentions = ["elogio", "critica", "informacao", "pergunta", "outro"]
+    
     api_key = 'AIzaSyBC1f-aU5eUNp_Xx1sfVoTOZKnBtm2uKHI'
     try:
         youtube = build("youtube", "v3", developerKey=api_key)
@@ -88,18 +80,17 @@ def get_all_comments(video_id):
             for item in response.get('items', []):
                 snippet = item['snippet']['topLevelComment']['snippet']
                 text = snippet.get('textDisplay', '')
-                #try:
-                #    sentiment, intention = classify_comment(text)
-                #except:
-                #    sentiment, intention = "error", "error"
+                
+                auxSentiment = random.choice(sentiments)
+                auxIntention = random.choice(intentions)
 
                 comments.append({
                     'author': snippet.get('authorDisplayName', 'Anonymous'),
                     'text': text,
                     'likes': snippet.get('likeCount', 0),
                     'published_at': snippet.get('publishedAt', ''),
-                    'sentiment': "sentiment",
-                    'intention': "intention"
+                    'sentiment': auxSentiment,
+                    'intention': auxIntention
                 })
 
             next_page_token = response.get('nextPageToken')

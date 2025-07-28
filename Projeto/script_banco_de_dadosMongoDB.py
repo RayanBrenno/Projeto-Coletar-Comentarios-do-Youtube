@@ -3,20 +3,19 @@ from datetime import datetime
 
 # Conexão com MongoDB Atlas
 client = MongoClient(
-    "mongodb+srv://RayanBrenno:rayan123@rayan.e8buede.mongodb.net/")
-db = client["projetopython"]
+    "mongodb+srv://Rayan:rayan123@projetos.rbaccii.mongodb.net/")
+
+
+db = client["projetoYoutube"]
+
 
 # === USERS ===
 
 
-def create_users_collection():
-    if "users" not in db.list_collection_names():
-        db.create_collection("users")
-        db["users"].create_index("username", unique=True)
-
-
 def register_user(username, password):
     try:
+        if db["users"].find_one({"username": username}):
+            return False  # Usuário já existe
         db["users"].insert_one({"username": username, "password": password})
         return True
     except errors.DuplicateKeyError:
@@ -26,6 +25,7 @@ def register_user(username, password):
 def authenticate_user(username, password):
     user = db["users"].find_one({"username": username, "password": password})
     return str(user["_id"]) if user else None
+
 
 # === VIDEOS ===
 
@@ -74,6 +74,7 @@ def take_videos_by_user(user_id):
         "likes": v["likes"],
         "comments": v["comments"]
     } for v in videos]
+
 
 # === COMMENTS ===
 
