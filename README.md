@@ -24,3 +24,8 @@ Este projeto tem como objetivo **coletar, armazenar e visualizar comentários de
 - **Google API - coletar comentários e informações do vídeo**
 
 ---
+
+## Criar ambiente virtual
+- python3 -m venv venv
+- source .venv/bin/activate
+- pip install -r requirements.txt 
