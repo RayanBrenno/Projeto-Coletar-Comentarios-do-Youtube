@@ -106,6 +106,11 @@ def update_video_comments(comments, video_id):
         db["comments"].insert_many(new_comments)
 
 
+def take_comments_by_video_id(video_id):
+    comments = list(db["comments"].find({"video_id": video_id}))
+    return comments
+
+
 # === GESTÃO COMPLETA ===
 
 

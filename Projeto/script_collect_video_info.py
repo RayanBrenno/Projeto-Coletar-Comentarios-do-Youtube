@@ -53,9 +53,10 @@ def get_video_info(video_id):
 
 
 def get_all_comments(video_id):
-    sentiments = ["positivo", "negativo", "neutro"]
-    intentions = ["elogio", "critica", "informacao", "pergunta", "outro"]
-    
+
+    sentiments = ["Positive", "Negative", "Neutral"]
+    intentions = ["Praise", "Criticism", "Information", "Question", "Other"]
+ 
     api_key = 'AIzaSyBC1f-aU5eUNp_Xx1sfVoTOZKnBtm2uKHI'
     try:
         youtube = build("youtube", "v3", developerKey=api_key)
