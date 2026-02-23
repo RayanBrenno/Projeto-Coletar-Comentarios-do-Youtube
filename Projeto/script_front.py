@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import messagebox
 from script_banco_de_dadosMongoDB import *
 from script_collect_video_info import *
+from script_graphs import *
+
 
 style_text = ("Times New Roman", 13)
 background_color = "#f2f2f2"
@@ -20,7 +22,7 @@ def center_window(window, width, height):
 def open_login_window():
     login_window = tk.Tk()
     login_window.title("🔐 Login")
-    center_window(login_window, 400, 300)
+    center_window(login_window, 550, 330)
     login_window.configure(bg=background_color)
 
     tk.Label(login_window, text="Username:",
@@ -58,7 +60,7 @@ def open_login_window():
 def open_register_window():
     register_window = tk.Tk()
     register_window.title("📝 Register")
-    center_window(register_window, 400, 300)
+    center_window(register_window, 550, 330)
     register_window.configure(bg=background_color)
 
     tk.Label(register_window, text="Username:", bg=background_color,
@@ -118,7 +120,7 @@ def open_register_window():
 def open_menu_window(user_id):
     menu_window = tk.Tk()
     menu_window.title("📺 Action Menu")
-    center_window(menu_window, 400, 220)
+    center_window(menu_window, 550, 330)
     menu_window.configure(bg=background_color)
 
     tk.Label(menu_window, text="Choose an action:",
@@ -128,14 +130,20 @@ def open_menu_window(user_id):
     frame_buttons.pack(pady=10)
 
     btn_check = tk.Button(frame_buttons, text="Check a new video", width=25, command=lambda: [
-                          menu_window.destroy(), open_url_window(user_id)], bg=button_color, fg=button_text_color, font=style_text)
+                            menu_window.destroy(), open_url_window(user_id)], bg=button_color, fg=button_text_color, font=style_text)
+
     btn_update = tk.Button(frame_buttons, text="Update video", width=25, command=lambda: [menu_window.destroy(
-    ), open_select_update_video_window(user_id)], bg=button_color, fg=button_text_color, font=style_text)
+                            ), open_select_update_video_window(user_id)], bg=button_color, fg=button_text_color, font=style_text)
+
+    btn_graphs = tk.Button(frame_buttons, text="Generate graphs", width=25, command=lambda: [menu_window.destroy(), 
+                            open_select_graph_video_window(user_id)], bg=button_color, fg=button_text_color, font=style_text)
+
     btn_exit = tk.Button(frame_buttons, text="Logout", width=25, command=lambda: [
-                         menu_window.destroy(), open_login_window()], bg=button_color, fg=button_text_color, font=style_text)
+                            menu_window.destroy(), open_login_window()], bg=button_color, fg=button_text_color, font=style_text)
 
     btn_check.pack(pady=5)
     btn_update.pack(pady=5)
+    btn_graphs.pack(pady=5)
     btn_exit.pack(pady=5)
 
     menu_window.mainloop()
@@ -348,3 +356,83 @@ def open_update_video_window(user_id, previous_info):
         text_box.insert("end", formatted_line)
 
     text_box.config(state="disabled")
+
+    
+def open_select_graph_video_window(user_id):
+    videos = take_videos_by_user(user_id)
+
+    window = tk.Tk()
+    window.title("📊 Generate Graphs")
+    center_window(window, 1000, 600)
+    window.configure(bg=background_color)
+
+    tk.Label(window, text="Select a video to generate graphs:",
+             font=style_text, bg=background_color).pack(pady=15)
+
+    selected_video = tk.StringVar(value="__none__")
+
+    frame_check = tk.Frame(window, bg=background_color)
+    frame_check.pack(padx=20, fill="x")
+
+    for video in videos:
+        text = f"{video['title']} — {video['channel']}"
+        tk.Radiobutton(
+            frame_check,
+            text=text,
+            variable=selected_video,
+            value=video['idVideo'],
+            bg=background_color,
+            anchor="w",
+            font=style_text
+        ).pack(fill="x", pady=2)
+
+    def generate_graphs():
+        video_id = selected_video.get()
+        if video_id == "__none__":
+            messagebox.showwarning("Warning", "Please select a video.")
+            return
+
+        current_info = None
+        for video in videos:
+            if video["idVideo"] == video_id:
+                current_info = video
+                break
+
+        if not current_info:
+            messagebox.showerror("Error", "Video not found.")
+            return
+
+        window.destroy()
+
+        # chama o arquivo externo que faz os plots
+        generate_graphs_for_video(current_info)
+
+        # volta pro menu
+        open_menu_window(user_id)
+
+    frame_buttons = tk.Frame(window, bg=background_color)
+    frame_buttons.pack(pady=25)
+
+    btn_generate = tk.Button(
+        frame_buttons,
+        text="Generate",
+        command=generate_graphs,
+        bg=button_color,
+        fg=button_text_color,
+        font=style_text,
+        width=25
+    )
+    btn_generate.pack(pady=5)
+
+    btn_back = tk.Button(
+        frame_buttons,
+        text="Back to menu",
+        command=lambda: [window.destroy(), open_menu_window(user_id)],
+        bg=button_color,
+        fg=button_text_color,
+        font=style_text,
+        width=25
+    )
+    btn_back.pack(pady=5)
+
+    window.mainloop()
