@@ -1,31 +1,44 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import DashboardPage from "./pages/DashboardPage";
 
-// Componente principal da aplicação, configurando as rotas usando React Router, envolvendo a aplicação com o provedor de autenticação e protegendo a rota do dashboard para usuários autenticados
+import { HomePage } from "./pages/HomePage";
+import { ConsultarPage } from "./pages/ConsultarPage";
+import { AtualizarPage } from "./pages/AtualizarPage";
+
+import { Layout } from "./components/Layout";
+
 export default function App() {
   return (
     <Router>
       <AuthProvider>
         <Routes>
-
-          {/* Rotas públicas para login e registro, e rota protegida para o dashboard que exige autenticação. A rota raiz redireciona para o dashboard. */}
+          {/* públicas */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
-          {/* Rota protegida para o dashboard, que só pode ser acessada por usuários autenticados. O componente ProtectedRoute verifica o estado de autenticação e redireciona para a página de login se o usuário não estiver autenticado. */}
+          {/* protegidas */}
           <Route
-            path="/dashboard"
+            path="/"
             element={
               <ProtectedRoute>
-                <DashboardPage />
+                <Layout />
               </ProtectedRoute>
             }
-          />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          >
+            <Route path="home" element={<HomePage />} />
+            <Route path="consultar" element={<ConsultarPage />} />
+            <Route path="atualizar" element={<AtualizarPage />} />
+
+            {/* default */}
+            <Route index element={<Navigate to="home" replace />} />
+          </Route>
+
+          {/* fallback */}
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </AuthProvider>
     </Router>
