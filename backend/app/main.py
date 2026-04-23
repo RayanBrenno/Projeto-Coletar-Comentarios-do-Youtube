@@ -2,6 +2,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes.autenticacao import router as auth_router
+from app.routes.youtube import router as youtube_router
 
 app = FastAPI(
     title="Projeto Coletar Comentários do YouTube",
@@ -20,3 +21,4 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(youtube_router)
