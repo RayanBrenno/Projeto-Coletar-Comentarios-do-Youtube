@@ -1,49 +1,12 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
-
-type HistoryVideo = {
-  idVideo: string;
-  codeURL: string;
-  idUsuario: string;
-  title: string;
-  channel: string;
-  publish_date: string;
-  views: number;
-  likes: number;
-  comments: number;
-  thumbnail_url?: string | null;
-  last_updated_at?: string | null;
-};
-
-type CommentData = {
-  author: string;
-  text: string;
-  likes: number;
-  published_at: string;
-};
-
-type ConsultResponse = {
-  video_id: string;
-  video: {
-    codeURL: string;
-    title: string;
-    channel: string;
-    publish_date: string;
-    views: number;
-    likes: number;
-    comments: number;
-    thumbnail_url?: string | null;
-    last_updated_at?: string | null;
-  };
-  total_comments: number;
-  comments: CommentData[];
-};
-
-type UpdatedVideoState = {
-  before: HistoryVideo;
-  after: ConsultResponse;
-};
+import { VideoResultCard } from "../components/VideoResultCard";
+import {
+  type HistoryVideo,
+  type ConsultResponse,
+  type UpdatedVideoState,
+} from "../types/video";
 
 function formatDate(value?: string | null) {
   if (!value) return "-";
@@ -71,14 +34,6 @@ function formatNumber(value: number) {
   return new Intl.NumberFormat("pt-BR").format(value);
 }
 
-function getDelta(current: number, previous: number) {
-  const delta = current - previous;
-
-  if (delta > 0) return `(+${formatNumber(delta)})`;
-  if (delta < 0) return `(${formatNumber(delta)})`;
-  return "(0)";
-}
-
 export function AtualizarPage() {
   const { user } = useAuth();
 
@@ -104,7 +59,21 @@ export function AtualizarPage() {
       const { data } = await api.get<HistoryVideo[]>(
         `/youtube/history/${user.id}`,
       );
-      setHistory(Array.isArray(data) ? data : []);
+
+      const sortedHistory = Array.isArray(data)
+        ? [...data].sort((a, b) => {
+            const dateA = a.last_updated_at
+              ? new Date(a.last_updated_at).getTime()
+              : 0;
+            const dateB = b.last_updated_at
+              ? new Date(b.last_updated_at).getTime()
+              : 0;
+
+            return dateB - dateA;
+          })
+        : [];
+
+      setHistory(sortedHistory);
     } catch (err) {
       console.error("Erro ao buscar histórico:", err);
       setError("Não foi possível carregar o histórico de vídeos.");
@@ -153,6 +122,13 @@ export function AtualizarPage() {
   if (updatedVideo) {
     const { before, after } = updatedVideo;
 
+    const sortedComments = [...after.comments].sort((a, b) => {
+      const dateA = a.published_at ? new Date(a.published_at).getTime() : 0;
+      const dateB = b.published_at ? new Date(b.published_at).getTime() : 0;
+
+      return dateB - dateA;
+    });
+
     return (
       <div className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col">
         <div className="flex items-center justify-between gap-4 mb-6">
@@ -174,105 +150,36 @@ export function AtualizarPage() {
         </div>
 
         <div className="space-y-6">
-          <div className="bg-white/5 border border-white/10 rounded-xl p-5">
-            <h2 className="text-lg font-semibold text-white mb-4">Resultado</h2>
-
-            <div className="flex flex-col md:flex-row gap-6 items-stretch">
-              <div className="md:w-[380px] w-full shrink-0">
-                {after.video.thumbnail_url ? (
-                  <img
-                    src={after.video.thumbnail_url}
-                    alt={after.video.title}
-                    className="w-full h-full rounded-xl border border-white/10 object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full min-h-[220px] rounded-xl border border-white/10 bg-white/5 flex items-center justify-center text-white/30">
-                    Thumbnail indisponível
-                  </div>
-                )}
-              </div>
-
-              <div className="space-y-2 text-white/70 flex-1">
-                <p>
-                  <strong className="text-white">Título:</strong>{" "}
-                  {after.video.title}
-                </p>
-                <p>
-                  <strong className="text-white">Canal:</strong>{" "}
-                  {after.video.channel}
-                </p>
-                <p>
-                  <strong className="text-white">Publicação:</strong>{" "}
-                  {formatDate(after.video.publish_date)}
-                </p>
-                <p>
-                  <strong className="text-white">
-                    Última atualização anterior:
-                  </strong>{" "}
-                  {formatDateTime(before.last_updated_at)}
-                </p>
-                <p>
-                  <strong className="text-white">Atualizado agora em:</strong>{" "}
-                  {formatDateTime(after.video.last_updated_at)}
-                </p>
-
-                <p>
-                  <strong className="text-white">Views:</strong>{" "}
-                  {formatNumber(after.video.views)}{" "}
-                  <span className="text-green-400">
-                    {getDelta(after.video.views, before.views)}
-                  </span>
-                </p>
-
-                <p>
-                  <strong className="text-white">Likes:</strong>{" "}
-                  {formatNumber(after.video.likes)}{" "}
-                  <span className="text-green-400">
-                    {getDelta(after.video.likes, before.likes)}
-                  </span>
-                </p>
-
-                <p>
-                  <strong className="text-white">Comentários no vídeo:</strong>{" "}
-                  {formatNumber(after.video.comments)}{" "}
-                  <span className="text-green-400">
-                    {getDelta(after.video.comments, before.comments)}
-                  </span>
-                </p>
-
-                <p>
-                  <strong className="text-white">
-                    Comentários carregados agora:
-                  </strong>{" "}
-                  {formatNumber(after.total_comments)}
-                </p>
-              </div>
-            </div>
-          </div>
+          <VideoResultCard
+            video={after.video}
+            totalComments={after.total_comments}
+            previousStats={{
+              views: before.views,
+              likes: before.likes,
+              comments: before.comments,
+              lastUpdatedAt: before.last_updated_at,
+            }}
+          />
 
           <div className="bg-white/5 border border-white/10 rounded-xl p-5">
             <h2 className="text-lg font-semibold text-white mb-4">
               Comentários atuais
             </h2>
 
-            {after.comments.length === 0 ? (
+            {sortedComments.length === 0 ? (
               <p className="text-white/40">Nenhum comentário encontrado.</p>
             ) : (
               <div className="space-y-4 max-h-[500px] overflow-y-auto pr-1">
-                {[...after.comments]
-                .sort((a, b) => {
-                  const dateA = a.published_at ? new Date(a.published_at).getTime() : 0;
-                  const dateB = b.published_at ? new Date(b.published_at).getTime() : 0;
-                  return dateB - dateA;
-                }).map((comment, index) => (
+                {sortedComments.map((comment, index) => (
                   <div
-                    key={`${comment.author}-${comment.published_at}-${index}`}
+                    key={`${comment.id ?? comment.author}-${comment.published_at}-${index}`}
                     className="bg-white/5 border border-white/10 rounded-xl p-4"
                   >
                     <div className="flex items-center justify-between gap-4 mb-2">
                       <p className="text-white font-medium truncate">
                         {comment.author}
                       </p>
+
                       <span className="text-xs text-white/40 shrink-0">
                         {formatDate(comment.published_at)}
                       </span>
@@ -324,12 +231,7 @@ export function AtualizarPage() {
 
       {!loading && !error && history.length > 0 && (
         <div className="space-y-4">
-          {[...history]
-          .sort((a, b) => {
-            const dateA = a.last_updated_at ? new Date(a.last_updated_at).getTime() : 0;
-            const dateB = b.last_updated_at ? new Date(b.last_updated_at).getTime() : 0;
-            return dateB - dateA;
-          }).map((video) => {
+          {history.map((video) => {
             const isUpdating = updatingVideoId === video.idVideo;
 
             return (
