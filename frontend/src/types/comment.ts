@@ -6,3 +6,11 @@ export interface Comment {
   likes: number;
   publishedAt: string;
 }
+
+export interface CommentData {
+  id: string; 
+  author: string;
+  text: string;
+  likes: number;
+  published_at: string;
+}
