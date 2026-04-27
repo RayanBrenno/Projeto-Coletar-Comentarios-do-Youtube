@@ -1,11 +1,15 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { AlertTriangle, X, RefreshCcw, Search } from "lucide-react";
-
-import api from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 import { VideoResultCard } from "../components/VideoResultCard";
-import { type ConsultResponse } from "../types/video";
+import {
+  checkVideoAlreadyConsulted,
+  consultYoutubeVideo,
+  getApiErrorMessage,
+} from "../services/youtubeService";
+
+import { type ConsultResponse, type ExistingVideo } from "../types/video";
 
 function formatNumber(value: number) {
   return new Intl.NumberFormat("pt-BR").format(value);
@@ -19,21 +23,6 @@ function formatDate(value?: string | null) {
     month: "2-digit",
     year: "numeric",
   });
-}
-
-interface ExistingVideo {
-  id: string;
-  code_url: string;
-  title: string;
-  channel: string;
-  thumbnail_url?: string | null;
-  last_updated_at?: string | null;
-  consulted_at?: string | null;
-}
-
-interface CheckVideoResponse {
-  exists: boolean;
-  video: ExistingVideo | null;
 }
 
 export function ConsultarPage() {
@@ -53,20 +42,6 @@ export function ConsultarPage() {
     null,
   );
 
-  function getErrorMessage(err: any) {
-    const detail = err?.response?.data?.detail;
-
-    let message = "Não foi possível realizar a operação.";
-
-    if (typeof detail === "string") {
-      message = detail;
-    } else if (Array.isArray(detail) && detail.length > 0) {
-      message = detail[0]?.msg || message;
-    }
-
-    return message;
-  }
-
   async function consultVideo() {
     if (!user?.id) {
       setError("Usuário não identificado.");
@@ -78,14 +53,16 @@ export function ConsultarPage() {
       setResult(null);
       setError("");
 
-      const { data } = await api.post<ConsultResponse>("/youtube/full-data", {
+      const data = await consultYoutubeVideo({
         url,
         user_id: user.id,
       });
 
       setResult(data);
-    } catch (err: any) {
-      setError(getErrorMessage(err) || "Não foi possível consultar o vídeo.");
+    } catch (err) {
+      setError(
+        getApiErrorMessage(err) || "Não foi possível consultar o vídeo.",
+      );
     } finally {
       setLoading(false);
     }
@@ -109,13 +86,10 @@ export function ConsultarPage() {
       setCheckingVideo(true);
       setResult(null);
 
-      const { data } = await api.post<CheckVideoResponse>(
-        "/youtube/check-video",
-        {
-          url,
-          user_id: user.id,
-        },
-      );
+      const data = await checkVideoAlreadyConsulted({
+        url,
+        user_id: user.id,
+      });
 
       if (data.exists && data.video) {
         setExistingVideo(data.video);
@@ -124,8 +98,10 @@ export function ConsultarPage() {
       }
 
       await consultVideo();
-    } catch (err: any) {
-      setError(getErrorMessage(err) || "Não foi possível verificar o vídeo.");
+    } catch (err) {
+      setError(
+        getApiErrorMessage(err) || "Não foi possível verificar o vídeo.",
+      );
     } finally {
       setCheckingVideo(false);
     }
@@ -189,6 +165,7 @@ export function ConsultarPage() {
                     <h2 className="text-xl font-bold text-white">
                       Vídeo já consultado
                     </h2>
+
                     <p className="text-sm text-white/50 mt-1">
                       Esse vídeo já existe no seu histórico de consultas.
                     </p>
@@ -342,6 +319,7 @@ export function ConsultarPage() {
               <h1 className="text-2xl font-bold text-white mb-2">
                 Vídeo consultado
               </h1>
+
               <p className="text-white/50">
                 Informações do vídeo consultado e comentários encontrados.
               </p>

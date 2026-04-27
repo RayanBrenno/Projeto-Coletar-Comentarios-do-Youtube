@@ -1,3 +1,12 @@
+export interface YoutubeComment {
+  id?: string | null;
+  author: string;
+  text: string;
+  likes: number;
+  published_at?: string | null;
+  avatar?: string | null;
+}
+
 export interface Comment {
   id: string;
   author: string;
@@ -5,12 +14,4 @@ export interface Comment {
   text: string;
   likes: number;
   publishedAt: string;
-}
-
-export interface CommentData {
-  id: string; 
-  author: string;
-  text: string;
-  likes: number;
-  published_at: string;
 }

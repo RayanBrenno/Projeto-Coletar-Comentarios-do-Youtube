@@ -7,30 +7,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 
-interface VideoData {
-  codeURL?: string;
-  code_url?: string;
-  title: string;
-  channel: string;
-  publish_date: string;
-  views: number;
-  likes: number;
-  comments: number;
-  thumbnail_url?: string | null;
-}
-
-interface PreviousStats {
-  views: number;
-  likes: number;
-  comments: number;
-  lastUpdatedAt?: string | null;
-}
-
-interface VideoResultCardProps {
-  video: VideoData;
-  totalComments?: number;
-  previousStats?: PreviousStats;
-}
+import { type VideoResultCardProps } from "../types/video";
 
 function formatNumber(value: number) {
   return new Intl.NumberFormat("pt-BR").format(value);
@@ -61,12 +38,27 @@ function formatDiff(value: number | null) {
   return formatNumber(value);
 }
 
+function getYoutubeVideoUrl(video: VideoResultCardProps["video"]) {
+  const rawValue =
+    video.code_url || video.codeURL || video.url || video.video_url || "";
+
+  if (!rawValue) return null;
+
+  if (rawValue.startsWith("http")) {
+    return rawValue;
+  }
+
+  return `https://www.youtube.com/watch?v=${rawValue}`;
+}
+
 export function VideoResultCard({
   video,
   totalComments,
   previousStats,
 }: VideoResultCardProps) {
-  const videoCode = video.codeURL || video.code_url;
+  const youtubeUrl = getYoutubeVideoUrl(video);
+
+  const lastUpdatedAt = previousStats?.last_updated_at;
 
   const viewsDiff = getDiff(video.views, previousStats?.views);
   const likesDiff = getDiff(video.likes, previousStats?.likes);
@@ -99,9 +91,9 @@ export function VideoResultCard({
               <p className="text-white/50 mt-2">{video.channel}</p>
             </div>
 
-            {videoCode && (
+            {youtubeUrl && (
               <a
-                href={`https://www.youtube.com/watch?v=${videoCode}`}
+                href={youtubeUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="w-fit inline-flex items-center gap-2 text-sm text-red-300 hover:text-red-200 transition-colors"
@@ -188,11 +180,11 @@ export function VideoResultCard({
                 </div>
               )}
 
-              {previousStats?.lastUpdatedAt && (
+              {lastUpdatedAt && (
                 <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white/50">
                   Comparado com:{" "}
                   <span className="text-white/70">
-                    {formatDate(previousStats.lastUpdatedAt)}
+                    {formatDate(lastUpdatedAt)}
                   </span>
                 </div>
               )}
