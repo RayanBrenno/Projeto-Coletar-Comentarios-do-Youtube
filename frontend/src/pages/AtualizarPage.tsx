@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import api from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 import { VideoResultCard } from "../components/VideoResultCard";
-import { type HistoryVideo, type ConsultResponse } from "../types/video";
+import {
+  getApiErrorMessage,
+  getYoutubeHistory,
+  updateYoutubeVideoById,
+} from "../services/youtubeService";
+
+import {
+  type HistoryVideo,
+  type PreviousVideoStats,
+  type UpdatedVideoViewState,
+} from "../types/video";
 
 function formatNumber(value: number) {
   return new Intl.NumberFormat("pt-BR").format(value);
@@ -31,35 +40,18 @@ function formatDateTime(value?: string | null) {
   });
 }
 
-interface UpdateVideoResponse extends ConsultResponse {
-  previous?: {
-    views: number;
-    likes: number;
-    comments: number;
-    last_updated_at?: string | null;
-  };
-  current?: {
-    views: number;
-    likes: number;
-    comments: number;
-  };
-  diff?: {
-    views: number;
-    likes: number;
-    comments: number;
-  };
-}
+function sortHistoryByLastUpdate(history: HistoryVideo[]) {
+  return [...history].sort((a, b) => {
+    const dateA = a.last_updated_at
+      ? new Date(a.last_updated_at).getTime()
+      : 0;
 
-interface PreviousVideoStats {
-  views: number;
-  likes: number;
-  comments: number;
-  last_updated_at?: string | null;
-}
+    const dateB = b.last_updated_at
+      ? new Date(b.last_updated_at).getTime()
+      : 0;
 
-interface UpdatedVideoViewState {
-  before: PreviousVideoStats;
-  after: UpdateVideoResponse;
+    return dateB - dateA;
+  });
 }
 
 export function AtualizarPage() {
@@ -80,20 +72,6 @@ export function AtualizarPage() {
   const [updatedVideo, setUpdatedVideo] =
     useState<UpdatedVideoViewState | null>(null);
 
-  function getErrorMessage(err: any) {
-    const detail = err?.response?.data?.detail;
-
-    let message = "Não foi possível realizar a operação.";
-
-    if (typeof detail === "string") {
-      message = detail;
-    } else if (Array.isArray(detail) && detail.length > 0) {
-      message = detail[0]?.msg || message;
-    }
-
-    return message;
-  }
-
   async function fetchHistory() {
     if (!user?.id) {
       setError("Usuário não identificado.");
@@ -105,23 +83,8 @@ export function AtualizarPage() {
       setLoading(true);
       setError("");
 
-      const { data } = await api.get<HistoryVideo[]>(
-        `/youtube/history/${user.id}`,
-      );
-
-      const sortedHistory = Array.isArray(data)
-        ? [...data].sort((a, b) => {
-            const dateA = a.last_updated_at
-              ? new Date(a.last_updated_at).getTime()
-              : 0;
-
-            const dateB = b.last_updated_at
-              ? new Date(b.last_updated_at).getTime()
-              : 0;
-
-            return dateB - dateA;
-          })
-        : [];
+      const data = await getYoutubeHistory(user.id);
+      const sortedHistory = sortHistoryByLastUpdate(data);
 
       setHistory(sortedHistory);
     } catch (err) {
@@ -142,9 +105,7 @@ export function AtualizarPage() {
       setUpdatingVideoId(videoId);
       setError("");
 
-      const { data } = await api.post<UpdateVideoResponse>(
-        `/youtube/videos/${videoId}/update?user_id=${user.id}`,
-      );
+      const data = await updateYoutubeVideoById(videoId, user.id);
 
       const beforeStats: PreviousVideoStats = beforeVideo
         ? {
@@ -166,9 +127,11 @@ export function AtualizarPage() {
       });
 
       await fetchHistory();
-    } catch (err: any) {
+    } catch (err) {
       console.error("Erro ao atualizar vídeo:", err);
-      setError(getErrorMessage(err) || "Não foi possível atualizar o vídeo.");
+      setError(
+        getApiErrorMessage(err) || "Não foi possível atualizar o vídeo.",
+      );
     } finally {
       setUpdatingVideoId(null);
     }
@@ -235,7 +198,7 @@ export function AtualizarPage() {
               views: before.views,
               likes: before.likes,
               comments: before.comments,
-              lastUpdatedAt: before.last_updated_at,
+              last_updated_at: before.last_updated_at,
             }}
           />
 
