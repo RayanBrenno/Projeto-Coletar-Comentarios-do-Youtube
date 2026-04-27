@@ -1,4 +1,7 @@
 import { useState, type FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { AlertTriangle, X, RefreshCcw, Search } from "lucide-react";
+
 import api from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 import { VideoResultCard } from "../components/VideoResultCard";
@@ -18,13 +21,75 @@ function formatDate(value?: string | null) {
   });
 }
 
+interface ExistingVideo {
+  id: string;
+  code_url: string;
+  title: string;
+  channel: string;
+  thumbnail_url?: string | null;
+  last_updated_at?: string | null;
+  consulted_at?: string | null;
+}
+
+interface CheckVideoResponse {
+  exists: boolean;
+  video: ExistingVideo | null;
+}
+
 export function ConsultarPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
+  const [checkingVideo, setCheckingVideo] = useState(false);
   const [result, setResult] = useState<ConsultResponse | null>(null);
   const [error, setError] = useState("");
+
+  const [showAlreadyConsultedModal, setShowAlreadyConsultedModal] =
+    useState(false);
+
+  const [existingVideo, setExistingVideo] = useState<ExistingVideo | null>(
+    null,
+  );
+
+  function getErrorMessage(err: any) {
+    const detail = err?.response?.data?.detail;
+
+    let message = "Não foi possível realizar a operação.";
+
+    if (typeof detail === "string") {
+      message = detail;
+    } else if (Array.isArray(detail) && detail.length > 0) {
+      message = detail[0]?.msg || message;
+    }
+
+    return message;
+  }
+
+  async function consultVideo() {
+    if (!user?.id) {
+      setError("Usuário não identificado.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setResult(null);
+      setError("");
+
+      const { data } = await api.post<ConsultResponse>("/youtube/full-data", {
+        url,
+        user_id: user.id,
+      });
+
+      setResult(data);
+    } catch (err: any) {
+      setError(getErrorMessage(err) || "Não foi possível consultar o vídeo.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -41,30 +106,50 @@ export function ConsultarPage() {
     }
 
     try {
-      setLoading(true);
+      setCheckingVideo(true);
       setResult(null);
 
-      const { data } = await api.post<ConsultResponse>("/youtube/full-data", {
-        url,
-        user_id: user.id,
-      });
+      const { data } = await api.post<CheckVideoResponse>(
+        "/youtube/check-video",
+        {
+          url,
+          user_id: user.id,
+        },
+      );
 
-      setResult(data);
-    } catch (err: any) {
-      const detail = err?.response?.data?.detail;
-
-      let message = "Não foi possível consultar o vídeo.";
-
-      if (typeof detail === "string") {
-        message = detail;
-      } else if (Array.isArray(detail) && detail.length > 0) {
-        message = detail[0]?.msg || message;
+      if (data.exists && data.video) {
+        setExistingVideo(data.video);
+        setShowAlreadyConsultedModal(true);
+        return;
       }
 
-      setError(message);
+      await consultVideo();
+    } catch (err: any) {
+      setError(getErrorMessage(err) || "Não foi possível verificar o vídeo.");
     } finally {
-      setLoading(false);
+      setCheckingVideo(false);
     }
+  }
+
+  async function handleContinueConsult() {
+    setShowAlreadyConsultedModal(false);
+    setExistingVideo(null);
+    await consultVideo();
+  }
+
+  function handleCancelConsult() {
+    setShowAlreadyConsultedModal(false);
+    setExistingVideo(null);
+  }
+
+  function handleUpdateAndCompare() {
+    if (!existingVideo?.id) {
+      setError("Não foi possível identificar o vídeo para atualização.");
+      setShowAlreadyConsultedModal(false);
+      return;
+    }
+
+    navigate(`/atualizar?videoId=${existingVideo.id}`);
   }
 
   function handleNewConsult() {
@@ -72,20 +157,135 @@ export function ConsultarPage() {
     setResult(null);
     setError("");
     setLoading(false);
+    setCheckingVideo(false);
+    setExistingVideo(null);
+    setShowAlreadyConsultedModal(false);
   }
 
   const sortedComments = result
     ? [...result.comments].sort((a, b) => {
         const dateA = a.published_at ? new Date(a.published_at).getTime() : 0;
-
         const dateB = b.published_at ? new Date(b.published_at).getTime() : 0;
 
         return dateB - dateA;
       })
     : [];
 
+  const isBusy = loading || checkingVideo;
+
   return (
-    <div className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col">
+    <div className="relative bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col">
+      {showAlreadyConsultedModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4">
+          <div className="w-full max-w-xl rounded-2xl border border-red-500/30 bg-gray-950 shadow-2xl shadow-red-950/40 overflow-hidden">
+            <div className="bg-gradient-to-r from-red-950/80 via-gray-950 to-gray-950 px-6 py-5 border-b border-white/10">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-red-500/15 border border-red-500/30 flex items-center justify-center">
+                    <AlertTriangle className="w-6 h-6 text-red-400" />
+                  </div>
+
+                  <div>
+                    <h2 className="text-xl font-bold text-white">
+                      Vídeo já consultado
+                    </h2>
+                    <p className="text-sm text-white/50 mt-1">
+                      Esse vídeo já existe no seu histórico de consultas.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleCancelConsult}
+                  className="text-white/40 hover:text-white transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            <div className="px-6 py-5 space-y-5">
+              {existingVideo && (
+                <div className="flex gap-4 bg-white/5 border border-white/10 rounded-xl p-4">
+                  {existingVideo.thumbnail_url && (
+                    <img
+                      src={existingVideo.thumbnail_url}
+                      alt={existingVideo.title}
+                      className="w-28 h-20 rounded-lg object-cover border border-white/10"
+                    />
+                  )}
+
+                  <div className="min-w-0">
+                    <p className="text-white font-semibold line-clamp-2">
+                      {existingVideo.title}
+                    </p>
+
+                    <p className="text-sm text-white/50 mt-1">
+                      {existingVideo.channel}
+                    </p>
+
+                    <p className="text-xs text-white/35 mt-2">
+                      Última consulta:{" "}
+                      {formatDate(
+                        existingVideo.last_updated_at ||
+                          existingVideo.consulted_at,
+                      )}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-3 text-sm leading-relaxed">
+                <p className="text-white/70">
+                  Se você continuar com uma consulta simples, o sistema vai
+                  exibir os dados atuais do vídeo normalmente.
+                </p>
+
+                <p className="text-red-300/90">
+                  Porém, essa consulta não mostrará o comparativo de crescimento
+                  desde a última consulta, como aumento de views, likes e
+                  comentários.
+                </p>
+
+                <p className="text-white/50">
+                  Para ver o comparativo, use a opção de atualização.
+                </p>
+              </div>
+            </div>
+
+            <div className="px-6 py-5 bg-white/[0.03] border-t border-white/10 flex flex-col sm:flex-row justify-end gap-3">
+              <button
+                type="button"
+                onClick={handleCancelConsult}
+                className="px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white font-medium transition-all"
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                onClick={handleContinueConsult}
+                disabled={loading}
+                className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-white font-medium transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+              >
+                <Search className="w-4 h-4" />
+                Continuar consulta
+              </button>
+
+              <button
+                type="button"
+                onClick={handleUpdateAndCompare}
+                className="px-5 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold transition-all flex items-center justify-center gap-2"
+              >
+                <RefreshCcw className="w-4 h-4" />
+                Atualizar e comparar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {!result && !loading && (
         <>
           <h1 className="text-2xl font-bold text-white mb-2">Consultar</h1>
@@ -116,10 +316,14 @@ export function ConsultarPage() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={isBusy}
               className="px-5 py-3 rounded-xl bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-medium transition-all"
             >
-              {loading ? "Consultando..." : "Consultar"}
+              {checkingVideo
+                ? "Verificando..."
+                : loading
+                  ? "Consultando..."
+                  : "Consultar"}
             </button>
           </form>
         </>
