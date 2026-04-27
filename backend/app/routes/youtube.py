@@ -1,15 +1,13 @@
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.youtube import (
-    YoutubeURLRequest,
-    VideoInfoResponse,
-    VideoCommentsResponse,
-)
+from app.schemas.youtube import YoutubeURLRequest
+
 from app.services.youtube_service import (
     get_code_url,
     get_video_info,
     get_all_comments,
 )
+
 from app.youtube_repository import (
     video_manager,
     take_comments_by_video_id,
@@ -24,12 +22,6 @@ router = APIRouter(prefix="/youtube", tags=["youtube"])
 
 @router.post("/check-video")
 def check_video(payload: YoutubeURLRequest):
-    """
-    Verifica se o vídeo já foi consultado pelo usuário.
-    Esse endpoint NÃO atualiza o vídeo e NÃO busca dados na API do YouTube.
-    Ele apenas consulta o banco.
-    """
-
     video_code_url = get_code_url(str(payload.url))
 
     existing_video = take_video_by_code_url_and_user(
@@ -57,42 +49,6 @@ def check_video(payload: YoutubeURLRequest):
             "likes": existing_video.get("likes"),
             "comments": existing_video.get("comments"),
         },
-    }
-
-
-@router.post("/video-info", response_model=VideoInfoResponse)
-def fetch_video_info(payload: YoutubeURLRequest):
-    video_id = get_code_url(str(payload.url))
-    video_info = get_video_info(video_id)
-
-    video_manager(video_info, [], payload.user_id)
-
-    return video_info
-
-
-@router.post("/comments", response_model=VideoCommentsResponse)
-def fetch_video_comments(payload: YoutubeURLRequest):
-    video_id = get_code_url(str(payload.url))
-    video_info = get_video_info(video_id)
-    comments = get_all_comments(video_id)
-
-    saved_video_id = video_manager(video_info, comments, payload.user_id)
-    saved_comments = take_comments_by_video_id(saved_video_id)
-
-    normalized_comments = [
-        {
-            "author": comment["author"],
-            "text": comment["text"],
-            "likes": comment["likes"],
-            "published_at": comment["published_at"],
-        }
-        for comment in saved_comments
-    ]
-
-    return {
-        "video_id": saved_video_id,
-        "total_comments": len(normalized_comments),
-        "comments": normalized_comments,
     }
 
 
@@ -128,36 +84,8 @@ def fetch_full_video_data(payload: YoutubeURLRequest):
     }
 
 
-@router.get("/videos/{video_id}")
-def fetch_video_by_id(video_id: str, user_id: str):
-    """
-    Busca um vídeo salvo pelo ID.
-    O user_id é obrigatório para impedir acesso a vídeo de outro usuário.
-    """
-
-    video = take_video_by_id_and_user(
-        video_id=video_id,
-        user_id=user_id,
-    )
-
-    if not video:
-        raise HTTPException(
-            status_code=404,
-            detail="Vídeo não encontrado para este usuário.",
-        )
-
-    video["_id"] = str(video["_id"])
-
-    return video
-
-
 @router.post("/videos/{video_id}/update")
 def update_saved_video(video_id: str, user_id: str):
-    """
-    Atualiza um vídeo já salvo e retorna o comparativo antes/depois.
-    Esse endpoint será usado pela AtualizarPage.
-    """
-
     old_video = take_video_by_id_and_user(
         video_id=video_id,
         user_id=user_id,
