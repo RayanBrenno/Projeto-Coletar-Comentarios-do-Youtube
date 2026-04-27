@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import api from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 import { VideoResultCard } from "../components/VideoResultCard";
-import {
-  type HistoryVideo,
-  type ConsultResponse,
-  type UpdatedVideoState,
-} from "../types/video";
+import { type HistoryVideo, type ConsultResponse } from "../types/video";
+
+function formatNumber(value: number) {
+  return new Intl.NumberFormat("pt-BR").format(value);
+}
 
 function formatDate(value?: string | null) {
   if (!value) return "-";
@@ -30,20 +31,68 @@ function formatDateTime(value?: string | null) {
   });
 }
 
-function formatNumber(value: number) {
-  return new Intl.NumberFormat("pt-BR").format(value);
+interface UpdateVideoResponse extends ConsultResponse {
+  previous?: {
+    views: number;
+    likes: number;
+    comments: number;
+    last_updated_at?: string | null;
+  };
+  current?: {
+    views: number;
+    likes: number;
+    comments: number;
+  };
+  diff?: {
+    views: number;
+    likes: number;
+    comments: number;
+  };
+}
+
+interface PreviousVideoStats {
+  views: number;
+  likes: number;
+  comments: number;
+  last_updated_at?: string | null;
+}
+
+interface UpdatedVideoViewState {
+  before: PreviousVideoStats;
+  after: UpdateVideoResponse;
 }
 
 export function AtualizarPage() {
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+
+  const videoIdFromUrl = searchParams.get("videoId");
 
   const [history, setHistory] = useState<HistoryVideo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   const [updatingVideoId, setUpdatingVideoId] = useState<string | null>(null);
-  const [updatedVideo, setUpdatedVideo] = useState<UpdatedVideoState | null>(
+  const [autoUpdatedVideoId, setAutoUpdatedVideoId] = useState<string | null>(
     null,
   );
+
+  const [updatedVideo, setUpdatedVideo] =
+    useState<UpdatedVideoViewState | null>(null);
+
+  function getErrorMessage(err: any) {
+    const detail = err?.response?.data?.detail;
+
+    let message = "Não foi possível realizar a operação.";
+
+    if (typeof detail === "string") {
+      message = detail;
+    } else if (Array.isArray(detail) && detail.length > 0) {
+      message = detail[0]?.msg || message;
+    }
+
+    return message;
+  }
 
   async function fetchHistory() {
     if (!user?.id) {
@@ -65,6 +114,7 @@ export function AtualizarPage() {
             const dateA = a.last_updated_at
               ? new Date(a.last_updated_at).getTime()
               : 0;
+
             const dateB = b.last_updated_at
               ? new Date(b.last_updated_at).getTime()
               : 0;
@@ -82,33 +132,50 @@ export function AtualizarPage() {
     }
   }
 
-  async function handleUpdateVideo(video: HistoryVideo) {
+  async function updateVideoById(videoId: string, beforeVideo?: HistoryVideo) {
     if (!user?.id) {
       setError("Usuário não identificado.");
       return;
     }
 
     try {
-      setUpdatingVideoId(video.idVideo);
+      setUpdatingVideoId(videoId);
       setError("");
 
-      const { data } = await api.post<ConsultResponse>("/youtube/full-data", {
-        url: `https://www.youtube.com/watch?v=${video.codeURL}`,
-        user_id: user.id,
-      });
+      const { data } = await api.post<UpdateVideoResponse>(
+        `/youtube/videos/${videoId}/update?user_id=${user.id}`,
+      );
+
+      const beforeStats: PreviousVideoStats = beforeVideo
+        ? {
+            views: beforeVideo.views,
+            likes: beforeVideo.likes,
+            comments: beforeVideo.comments,
+            last_updated_at: beforeVideo.last_updated_at,
+          }
+        : {
+            views: data.previous?.views ?? 0,
+            likes: data.previous?.likes ?? 0,
+            comments: data.previous?.comments ?? 0,
+            last_updated_at: data.previous?.last_updated_at ?? null,
+          };
 
       setUpdatedVideo({
-        before: video,
+        before: beforeStats,
         after: data,
       });
 
       await fetchHistory();
-    } catch (err) {
+    } catch (err: any) {
       console.error("Erro ao atualizar vídeo:", err);
-      setError("Não foi possível atualizar o vídeo selecionado.");
+      setError(getErrorMessage(err) || "Não foi possível atualizar o vídeo.");
     } finally {
       setUpdatingVideoId(null);
     }
+  }
+
+  async function handleUpdateVideo(video: HistoryVideo) {
+    await updateVideoById(video.idVideo, video);
   }
 
   function handleBackToList() {
@@ -118,6 +185,15 @@ export function AtualizarPage() {
   useEffect(() => {
     fetchHistory();
   }, [user?.id]);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    if (!videoIdFromUrl) return;
+    if (autoUpdatedVideoId === videoIdFromUrl) return;
+
+    setAutoUpdatedVideoId(videoIdFromUrl);
+    updateVideoById(videoIdFromUrl);
+  }, [user?.id, videoIdFromUrl, autoUpdatedVideoId]);
 
   if (updatedVideo) {
     const { before, after } = updatedVideo;
@@ -136,12 +212,14 @@ export function AtualizarPage() {
             <h1 className="text-2xl font-bold text-white mb-2">
               Vídeo atualizado
             </h1>
+
             <p className="text-white/50">
               Comparativo entre a última atualização salva e os dados atuais.
             </p>
           </div>
 
           <button
+            type="button"
             onClick={handleBackToList}
             className="px-5 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-medium transition-all"
           >
@@ -208,8 +286,14 @@ export function AtualizarPage() {
 
       <p className="text-white/50 mb-6">
         Aqui estão os vídeos já consultados. Atualize quando quiser sincronizar
-        os dados mais recentes.
+        os dados mais recentes e visualizar o crescimento.
       </p>
+
+      {videoIdFromUrl && updatingVideoId === videoIdFromUrl && (
+        <div className="mb-6 bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-red-200">
+          Atualizando o vídeo selecionado pela consulta...
+        </div>
+      )}
 
       {loading && (
         <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-white/70">
@@ -237,17 +321,17 @@ export function AtualizarPage() {
             return (
               <div
                 key={video.idVideo}
-                className="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col md:flex-row gap-5 items-stretch"
+                className="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col md:flex-row gap-5 items-start"
               >
-                <div className="md:w-[320px] w-full shrink-0">
+                <div className="md:w-[420px] lg:w-[480px] w-full shrink-0">
                   {video.thumbnail_url ? (
                     <img
                       src={video.thumbnail_url}
                       alt={video.title}
-                      className="w-full h-full min-h-[220px] rounded-xl border border-white/10 object-cover"
+                      className="w-full aspect-video rounded-xl border border-white/10 object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full min-h-[220px] rounded-xl border border-white/10 bg-white/5 flex items-center justify-center text-white/30">
+                    <div className="w-full aspect-video rounded-xl border border-white/10 bg-white/5 flex items-center justify-center text-white/30">
                       Thumbnail indisponível
                     </div>
                   )}
@@ -259,27 +343,52 @@ export function AtualizarPage() {
                       {video.title}
                     </p>
 
-                    <p className="text-white/70">
-                      <strong className="text-white">Canal:</strong>{" "}
-                      {video.channel}
-                    </p>
+                    <p className="text-white/50">{video.channel}</p>
 
-                    <p className="text-white/70">
-                      <strong className="text-white">
-                        Última atualização:
-                      </strong>{" "}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 pt-3">
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                        <p className="text-xs text-white/40">Publicado em</p>
+                        <p className="text-sm text-white mt-1">
+                          {formatDate(video.publish_date)}
+                        </p>
+                      </div>
+
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                        <p className="text-xs text-white/40">Views</p>
+                        <p className="text-sm text-white mt-1">
+                          {formatNumber(video.views)}
+                        </p>
+                      </div>
+
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                        <p className="text-xs text-white/40">Likes</p>
+                        <p className="text-sm text-white mt-1">
+                          {formatNumber(video.likes)}
+                        </p>
+                      </div>
+
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                        <p className="text-xs text-white/40">Comentários</p>
+                        <p className="text-sm text-white mt-1">
+                          {formatNumber(video.comments)}
+                        </p>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-white/35 pt-2">
+                      Última atualização:{" "}
                       {formatDateTime(video.last_updated_at)}
                     </p>
                   </div>
 
-                  <div className="flex md:justify-end">
+                  <div className="flex justify-end">
                     <button
                       type="button"
                       onClick={() => handleUpdateVideo(video)}
                       disabled={isUpdating}
                       className="px-5 py-3 rounded-xl bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-medium transition-all"
                     >
-                      {isUpdating ? "Atualizando..." : "Atualizar"}
+                      {isUpdating ? "Atualizando..." : "Atualizar e comparar"}
                     </button>
                   </div>
                 </div>
