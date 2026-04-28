@@ -2,7 +2,7 @@ from fastapi import Header, HTTPException
 from app.utils.utils_jwt import decode_access_token
 from app.utils.utils_auth import get_user_by_id
 
-
+## tirar
 def get_current_user(authorization: str = Header(default=None)):
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Token não informado")
