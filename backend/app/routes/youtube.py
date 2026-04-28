@@ -66,12 +66,14 @@ def fetch_full_video_data(payload: YoutubeURLRequest):
     saved_video_id = video_manager(video_info, comments, payload.user_id)
     saved_comments = take_comments_by_video_id(saved_video_id)
 
-    normalized_comments = [
+    comments_response = [
         {
             "author": comment["author"],
             "text": comment["text"],
             "likes": comment["likes"],
             "published_at": comment["published_at"],
+            "intencao": comment["intencao"],
+            "score": comment["score"],
         }
         for comment in saved_comments
     ]
@@ -79,8 +81,8 @@ def fetch_full_video_data(payload: YoutubeURLRequest):
     return {
         "video_id": saved_video_id,
         "video": video_info,
-        "total_comments": len(normalized_comments),
-        "comments": normalized_comments,
+        "total_comments": len(comments_response),
+        "comments": comments_response,
     }
 
 
@@ -117,12 +119,14 @@ def update_saved_video(video_id: str, user_id: str):
 
     saved_comments = take_comments_by_video_id(saved_video_id)
 
-    normalized_comments = [
+    comments_response = [
         {
             "author": comment["author"],
             "text": comment["text"],
             "likes": comment["likes"],
             "published_at": comment["published_at"],
+            "intencao": comment["intencao"],
+            "score": comment["score"],
         }
         for comment in saved_comments
     ]
@@ -138,8 +142,8 @@ def update_saved_video(video_id: str, user_id: str):
     return {
         "video_id": str(saved_video_id),
         "video": new_video_info,
-        "total_comments": len(normalized_comments),
-        "comments": normalized_comments,
+        "total_comments": len(comments_response),
+        "comments": comments_response,
         "previous": {
             "views": old_views,
             "likes": old_likes,

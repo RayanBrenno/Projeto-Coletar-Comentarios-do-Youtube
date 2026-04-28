@@ -2,6 +2,7 @@ from googleapiclient.discovery import build
 from fastapi import HTTPException
 from datetime import datetime, timezone
 import os
+from app.services.ia_service import analisar_intencao_comentario
 
 
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
@@ -89,37 +90,44 @@ def get_video_info(video_id: str) -> dict:
 
 
 def get_all_comments(video_id: str) -> list[dict]:
-    try:
-        youtube = get_youtube_client()
-        comments = []
-        next_page_token = None
+    youtube = get_youtube_client()
 
-        while True:
-            request = youtube.commentThreads().list(
-                part="snippet",
-                videoId=video_id,
-                maxResults=100,
-                pageToken=next_page_token,
-                textFormat="plainText",
-                order="time"
-            )
-            response = request.execute()
+    comments = []
+    next_page_token = None
 
-            for item in response.get("items", []):
-                snippet = item["snippet"]["topLevelComment"]["snippet"]
+    while True:
+        request = youtube.commentThreads().list(
+            part="snippet",
+            videoId=video_id,
+            maxResults=100,
+            pageToken=next_page_token,
+            textFormat="plainText",
+            order="time",
+        )
 
-                comments.append({
-                    "author": snippet.get("authorDisplayName", "Anonymous"),
-                    "text": snippet.get("textDisplay", ""),
-                    "likes": int(snippet.get("likeCount", 0)),
-                    "published_at": snippet.get("publishedAt", ""),
-                })
+        response = request.execute()
 
-            next_page_token = response.get("nextPageToken")
-            if not next_page_token:
-                break
+        for item in response.get("items", []):
+            snippet = item["snippet"]["topLevelComment"]["snippet"]
 
-        return comments
+            text = snippet.get("textDisplay", "")
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erro ao buscar comentários: {str(e)}")
+            analise = analisar_intencao_comentario(text)
+
+            comment = {
+                "author": snippet.get("authorDisplayName", ""),
+                "text": text,
+                "likes": snippet.get("likeCount", 0),
+                "published_at": snippet.get("publishedAt"),
+                "intencao": analise["intencao"],
+                "score": analise["score"],
+            }
+
+            comments.append(comment)
+
+        next_page_token = response.get("nextPageToken")
+
+        if not next_page_token:
+            break
+
+    return comments

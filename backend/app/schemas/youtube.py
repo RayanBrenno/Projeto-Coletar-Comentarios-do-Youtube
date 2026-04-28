@@ -24,6 +24,8 @@ class CommentResponse(BaseModel):
     text: str
     likes: int
     published_at: str
+    intencao: Optional[str] = None
+    score: Optional[float] = None
 
 
 class VideoCommentsResponse(BaseModel):
