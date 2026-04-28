@@ -36,7 +36,7 @@ def get_video_by_code_url_and_user(code_url: str, user_id: str) -> dict | None:
 def take_video_by_code_url_and_user(code_url: str, user_id: str) -> dict | None:
     """
     Alias usado pelas rotas.
-    Mantém o nome mais alinhado com o restante do repository.
+    Mantém o nome alinhado com o restante do repository.
     """
     return get_video_by_code_url_and_user(code_url, user_id)
 
@@ -53,7 +53,7 @@ def get_video_id_if_exists(code_url: str, user_id: str) -> str | None:
 def take_video_by_id_and_user(video_id: str, user_id: str) -> dict | None:
     """
     Busca um vídeo pelo ID, validando também o usuário.
-    Isso evita que um usuário acesse/atualize vídeo salvo por outro.
+    Evita que um usuário acesse ou atualize vídeo salvo por outro.
     """
     if not ObjectId.is_valid(video_id):
         return None
@@ -186,6 +186,12 @@ def get_latest_comment_date(video_id: str):
 
 
 def update_video_comments(comments: list[dict], video_id: str) -> None:
+    """
+    Insere apenas comentários mais recentes que o último salvo.
+
+    Como você vai limpar a collection comments, não precisa normalizar documentos antigos.
+    A função mantém o objeto do service com intencao e score.
+    """
     if not comments:
         return
 
@@ -221,6 +227,8 @@ def take_comments_by_video_id(video_id: str) -> list[dict]:
         {
             **comment,
             "_id": str(comment["_id"]),
+            "intencao": comment.get("intencao"),
+            "score": comment.get("score"),
         }
         for comment in comments
     ]
