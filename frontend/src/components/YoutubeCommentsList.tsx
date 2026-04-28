@@ -1,21 +1,5 @@
 import { MessageCircle } from "lucide-react";
-
-interface YoutubeComment {
-  id?: string;
-  author: string;
-  text: string;
-  likes: number;
-  published_at?: string | null;
-  publishedAt?: string | null;
-  intencao?: string | null;
-  score?: number | null;
-}
-
-interface YoutubeCommentsListProps {
-  title?: string;
-  comments: YoutubeComment[];
-  maxHeightClassName?: string;
-}
+import { type YoutubeComment, type YoutubeCommentsListProps } from "../types/comment";
 
 function formatNumber(value: number) {
   return new Intl.NumberFormat("pt-BR").format(value);

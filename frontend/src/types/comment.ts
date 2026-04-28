@@ -9,13 +9,8 @@ export interface YoutubeComment {
   score?: number | null;
 }
 
-export interface Comment {
-  id: string;
-  author: string;
-  avatar: string;
-  text: string;
-  likes: number;
-  publishedAt: string;
-  intencao?: string;
-  score?: number;
+export interface YoutubeCommentsListProps {
+  title?: string;
+  comments: YoutubeComment[];
+  maxHeightClassName?: string;
 }
