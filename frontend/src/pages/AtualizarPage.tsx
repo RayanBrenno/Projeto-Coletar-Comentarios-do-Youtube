@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { VideoResultCard } from "../components/VideoResultCard";
+import { YoutubeCommentsList } from "../components/YoutubeCommentsList";
+
 import {
   getApiErrorMessage,
   getYoutubeHistory,
@@ -42,13 +44,9 @@ function formatDateTime(value?: string | null) {
 
 function sortHistoryByLastUpdate(history: HistoryVideo[]) {
   return [...history].sort((a, b) => {
-    const dateA = a.last_updated_at
-      ? new Date(a.last_updated_at).getTime()
-      : 0;
+    const dateA = a.last_updated_at ? new Date(a.last_updated_at).getTime() : 0;
 
-    const dateB = b.last_updated_at
-      ? new Date(b.last_updated_at).getTime()
-      : 0;
+    const dateB = b.last_updated_at ? new Date(b.last_updated_at).getTime() : 0;
 
     return dateB - dateA;
   });
@@ -161,13 +159,6 @@ export function AtualizarPage() {
   if (updatedVideo) {
     const { before, after } = updatedVideo;
 
-    const sortedComments = [...after.comments].sort((a, b) => {
-      const dateA = a.published_at ? new Date(a.published_at).getTime() : 0;
-      const dateB = b.published_at ? new Date(b.published_at).getTime() : 0;
-
-      return dateB - dateA;
-    });
-
     return (
       <div className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col">
         <div className="flex items-center justify-between gap-4 mb-6">
@@ -202,42 +193,11 @@ export function AtualizarPage() {
             }}
           />
 
-          <div className="bg-white/5 border border-white/10 rounded-xl p-5">
-            <h2 className="text-lg font-semibold text-white mb-4">
-              Comentários atuais
-            </h2>
-
-            {sortedComments.length === 0 ? (
-              <p className="text-white/40">Nenhum comentário encontrado.</p>
-            ) : (
-              <div className="space-y-4 max-h-[500px] overflow-y-auto pr-1">
-                {sortedComments.map((comment, index) => (
-                  <div
-                    key={`${comment.id ?? comment.author}-${comment.published_at}-${index}`}
-                    className="bg-white/5 border border-white/10 rounded-xl p-4"
-                  >
-                    <div className="flex items-center justify-between gap-4 mb-2">
-                      <p className="text-white font-medium truncate">
-                        {comment.author}
-                      </p>
-
-                      <span className="text-xs text-white/40 shrink-0">
-                        {formatDate(comment.published_at)}
-                      </span>
-                    </div>
-
-                    <p className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap">
-                      {comment.text}
-                    </p>
-
-                    <p className="text-xs text-white/40 mt-3">
-                      Likes: {formatNumber(comment.likes)}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <YoutubeCommentsList
+            title="Comentários atuais"
+            comments={after.comments}
+            maxHeightClassName="max-h-[500px]"
+          />
         </div>
       </div>
     );
