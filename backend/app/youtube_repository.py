@@ -33,14 +33,6 @@ def get_video_by_code_url_and_user(code_url: str, user_id: str) -> dict | None:
     )
 
 
-def take_video_by_code_url_and_user(code_url: str, user_id: str) -> dict | None:
-    """
-    Alias usado pelas rotas.
-    Mantém o nome alinhado com o restante do repository.
-    """
-    return get_video_by_code_url_and_user(code_url, user_id)
-
-
 def get_video_id_if_exists(code_url: str, user_id: str) -> str | None:
     video = get_video_by_code_url_and_user(code_url, user_id)
 
@@ -50,11 +42,7 @@ def get_video_id_if_exists(code_url: str, user_id: str) -> str | None:
     return str(video["_id"])
 
 
-def take_video_by_id_and_user(video_id: str, user_id: str) -> dict | None:
-    """
-    Busca um vídeo pelo ID, validando também o usuário.
-    Evita que um usuário acesse ou atualize vídeo salvo por outro.
-    """
+def get_video_by_id_and_user(video_id: str, user_id: str) -> dict | None:
     if not ObjectId.is_valid(video_id):
         return None
 
@@ -92,42 +80,18 @@ def update_video_by_id(
     comments: list[dict],
     user_id: str,
 ) -> str:
-    """
-    Atualiza um vídeo salvo pelo ID, validando o usuário.
-    Retorna o próprio video_id para manter o fluxo atual.
-    """
-    existing_video = take_video_by_id_and_user(video_id, user_id)
+    existing_video = get_video_by_id_and_user(video_id, user_id)
 
     if not existing_video:
         raise ValueError("Vídeo não encontrado para este usuário.")
 
-    now = datetime.utcnow()
-
-    db["videos"].update_one(
-        {
-            "_id": ObjectId(video_id),
-            "user_id": user_id,
-        },
-        {
-            "$set": {
-                "title": video_info["title"],
-                "channel": video_info["channel"],
-                "publish_date": video_info["publish_date"],
-                "views": video_info["views"],
-                "likes": video_info["likes"],
-                "comments": video_info["comments"],
-                "thumbnail_url": video_info.get("thumbnail_url"),
-                "last_updated_at": video_info.get("last_updated_at") or now,
-            }
-        },
-    )
-
+    update_video_info(video_info, video_id)
     update_video_comments(comments, video_id)
 
     return video_id
 
 
-def take_videos_by_user(user_id: str) -> list[dict]:
+def get_videos_by_user(user_id: str) -> list[dict]:
     videos = db["videos"].find({"user_id": user_id}).sort("last_updated_at", -1)
 
     return [
@@ -186,12 +150,6 @@ def get_latest_comment_date(video_id: str):
 
 
 def update_video_comments(comments: list[dict], video_id: str) -> None:
-    """
-    Insere apenas comentários mais recentes que o último salvo.
-
-    Como você vai limpar a collection comments, não precisa normalizar documentos antigos.
-    A função mantém o objeto do service com intencao e score.
-    """
     if not comments:
         return
 
@@ -216,7 +174,7 @@ def update_video_comments(comments: list[dict], video_id: str) -> None:
         db["comments"].insert_many(new_comments)
 
 
-def take_comments_by_video_id(video_id: str) -> list[dict]:
+def get_comments_by_video_id(video_id: str) -> list[dict]:
     comments = list(
         db["comments"]
         .find({"video_id": video_id})

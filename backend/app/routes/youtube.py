@@ -10,21 +10,35 @@ from app.services.youtube_service import (
 
 from app.youtube_repository import (
     video_manager,
-    take_comments_by_video_id,
-    take_videos_by_user,
-    take_video_by_code_url_and_user,
-    take_video_by_id_and_user,
+    get_comments_by_video_id,
+    get_videos_by_user,
+    get_video_by_code_url_and_user,
+    get_video_by_id_and_user,
     update_video_by_id,
 )
 
 router = APIRouter(prefix="/youtube", tags=["youtube"])
 
 
+def _format_comments(saved_comments: list[dict]) -> list[dict]:
+    return [
+        {
+            "author": comment["author"],
+            "text": comment["text"],
+            "likes": comment["likes"],
+            "published_at": comment["published_at"],
+            "intencao": comment["intencao"],
+            "score": comment["score"],
+        }
+        for comment in saved_comments
+    ]
+
+
 @router.post("/check-video")
 def check_video(payload: YoutubeURLRequest):
     video_code_url = get_code_url(str(payload.url))
 
-    existing_video = take_video_by_code_url_and_user(
+    existing_video = get_video_by_code_url_and_user(
         code_url=video_code_url,
         user_id=payload.user_id,
     )
@@ -54,7 +68,7 @@ def check_video(payload: YoutubeURLRequest):
 
 @router.get("/history/{user_id}")
 def fetch_video_history(user_id: str):
-    return take_videos_by_user(user_id)
+    return get_videos_by_user(user_id)
 
 
 @router.post("/full-data")
@@ -64,19 +78,9 @@ def fetch_full_video_data(payload: YoutubeURLRequest):
     comments = get_all_comments(video_id)
 
     saved_video_id = video_manager(video_info, comments, payload.user_id)
-    saved_comments = take_comments_by_video_id(saved_video_id)
+    saved_comments = get_comments_by_video_id(saved_video_id)
 
-    comments_response = [
-        {
-            "author": comment["author"],
-            "text": comment["text"],
-            "likes": comment["likes"],
-            "published_at": comment["published_at"],
-            "intencao": comment["intencao"],
-            "score": comment["score"],
-        }
-        for comment in saved_comments
-    ]
+    comments_response = _format_comments(saved_comments)
 
     return {
         "video_id": saved_video_id,
@@ -88,7 +92,7 @@ def fetch_full_video_data(payload: YoutubeURLRequest):
 
 @router.post("/videos/{video_id}/update")
 def update_saved_video(video_id: str, user_id: str):
-    old_video = take_video_by_id_and_user(
+    old_video = get_video_by_id_and_user(
         video_id=video_id,
         user_id=user_id,
     )
@@ -117,19 +121,8 @@ def update_saved_video(video_id: str, user_id: str):
         user_id=user_id,
     )
 
-    saved_comments = take_comments_by_video_id(saved_video_id)
-
-    comments_response = [
-        {
-            "author": comment["author"],
-            "text": comment["text"],
-            "likes": comment["likes"],
-            "published_at": comment["published_at"],
-            "intencao": comment["intencao"],
-            "score": comment["score"],
-        }
-        for comment in saved_comments
-    ]
+    saved_comments = get_comments_by_video_id(saved_video_id)
+    comments_response = _format_comments(saved_comments)
 
     old_views = int(old_video.get("views") or 0)
     old_likes = int(old_video.get("likes") or 0)
