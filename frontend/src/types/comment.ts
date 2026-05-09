@@ -4,7 +4,6 @@ export interface YoutubeComment {
   text: string;
   likes: number;
   published_at?: string | null;
-  publishedAt?: string | null;
   intencao?: string | null;
   score?: number | null;
 }

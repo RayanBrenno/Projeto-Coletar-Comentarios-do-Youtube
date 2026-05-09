@@ -4,8 +4,6 @@ export interface YoutubeVideo {
   id?: string;
   code_url?: string;
   codeURL?: string;
-  url?: string;
-  video_url?: string;
   title: string;
   channel: string;
   publish_date?: string | null;

@@ -39,8 +39,7 @@ function formatDiff(value: number | null) {
 }
 
 function getYoutubeVideoUrl(video: VideoResultCardProps["video"]) {
-  const rawValue =
-    video.code_url || video.codeURL || video.url || video.video_url || "";
+  const rawValue = video.code_url || video.codeURL || "";
 
   if (!rawValue) return null;
 

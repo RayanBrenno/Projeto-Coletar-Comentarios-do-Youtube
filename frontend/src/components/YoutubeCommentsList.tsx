@@ -16,7 +16,7 @@ function formatDate(value?: string | null) {
 }
 
 function getCommentDate(comment: YoutubeComment) {
-  return comment.published_at ?? comment.publishedAt ?? null;
+  return comment.published_at ?? null;
 }
 
 function sortCommentsByDate(comments: YoutubeComment[]) {

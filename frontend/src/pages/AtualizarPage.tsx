@@ -42,15 +42,6 @@ function formatDateTime(value?: string | null) {
   });
 }
 
-function sortHistoryByLastUpdate(history: HistoryVideo[]) {
-  return [...history].sort((a, b) => {
-    const dateA = a.last_updated_at ? new Date(a.last_updated_at).getTime() : 0;
-
-    const dateB = b.last_updated_at ? new Date(b.last_updated_at).getTime() : 0;
-
-    return dateB - dateA;
-  });
-}
 
 export function AtualizarPage() {
   const { user } = useAuth();
@@ -82,9 +73,8 @@ export function AtualizarPage() {
       setError("");
 
       const data = await getYoutubeHistory(user.id);
-      const sortedHistory = sortHistoryByLastUpdate(data);
 
-      setHistory(sortedHistory);
+      setHistory(data);
     } catch (err) {
       console.error("Erro ao buscar histórico:", err);
       setError("Não foi possível carregar o histórico de vídeos.");
