@@ -1,5 +1,0 @@
-pymongo
-mysql-connector-python
-google-api-python-client
-matplotlib
-pandas
