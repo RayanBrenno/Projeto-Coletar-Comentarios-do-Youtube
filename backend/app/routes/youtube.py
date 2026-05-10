@@ -15,6 +15,7 @@ from app.youtube_repository import (
     get_video_by_code_url_and_user,
     get_video_by_id_and_user,
     update_video_by_id,
+    get_dashboard_summary,
 )
 
 router = APIRouter(prefix="/youtube", tags=["youtube"])
@@ -69,6 +70,11 @@ def check_video(payload: YoutubeURLRequest):
 @router.get("/history/{user_id}")
 def fetch_video_history(user_id: str):
     return get_videos_by_user(user_id)
+
+
+@router.get("/dashboard/{user_id}")
+def fetch_dashboard_summary(user_id: str):
+    return get_dashboard_summary(user_id)
 
 
 @router.post("/full-data")

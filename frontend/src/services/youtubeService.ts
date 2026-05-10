@@ -5,6 +5,7 @@ import {
   type HistoryVideo,
   type UpdateVideoResponse,
 } from "../types/video";
+import { type DashboardSummary } from "../types/dashboard";
 
 export function getApiErrorMessage(err: unknown): string {
   const error = err as {
@@ -63,6 +64,16 @@ export async function getYoutubeHistory(
   );
 
   return Array.isArray(data) ? data : [];
+}
+
+export async function getDashboardSummary(
+  userId: string,
+): Promise<DashboardSummary> {
+  const { data } = await api.get<DashboardSummary>(
+    `/youtube/dashboard/${userId}`,
+  );
+
+  return data;
 }
 
 export async function updateYoutubeVideoById(

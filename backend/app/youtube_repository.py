@@ -192,6 +192,90 @@ def get_comments_by_video_id(video_id: str) -> list[dict]:
     ]
 
 
+def get_dashboard_summary(user_id: str) -> dict:
+    videos = list(db["videos"].find({"user_id": user_id}))
+
+    total_videos = len(videos)
+    total_views = sum(int(v.get("views") or 0) for v in videos)
+    total_likes = sum(int(v.get("likes") or 0) for v in videos)
+    total_video_comments = sum(int(v.get("comments") or 0) for v in videos)
+
+    video_ids = [str(v["_id"]) for v in videos]
+
+    sentiment_counts = {"positivo": 0, "neutro": 0, "negativo": 0}
+    total_collected_comments = 0
+
+    if video_ids:
+        pipeline = [
+            {"$match": {"video_id": {"$in": video_ids}}},
+            {"$group": {"_id": "$intencao", "count": {"$sum": 1}}},
+        ]
+
+        for row in db["comments"].aggregate(pipeline):
+            key = (row.get("_id") or "").lower()
+            count = int(row.get("count") or 0)
+            total_collected_comments += count
+
+            if key in sentiment_counts:
+                sentiment_counts[key] += count
+
+    latest_video = None
+    top_videos: list[dict] = []
+
+    if videos:
+        sorted_by_date = sorted(
+            videos,
+            key=lambda v: v.get("last_updated_at") or v.get("consulted_at") or datetime.min,
+            reverse=True,
+        )
+        latest = sorted_by_date[0]
+        latest_video = {
+            "id": str(latest["_id"]),
+            "code_url": latest.get("code_url"),
+            "title": latest.get("title"),
+            "channel": latest.get("channel"),
+            "thumbnail_url": latest.get("thumbnail_url"),
+            "views": int(latest.get("views") or 0),
+            "likes": int(latest.get("likes") or 0),
+            "comments": int(latest.get("comments") or 0),
+            "last_updated_at": latest.get("last_updated_at"),
+        }
+
+        sorted_by_views = sorted(
+            videos,
+            key=lambda v: int(v.get("views") or 0),
+            reverse=True,
+        )[:5]
+
+        top_videos = [
+            {
+                "id": str(v["_id"]),
+                "code_url": v.get("code_url"),
+                "title": v.get("title"),
+                "channel": v.get("channel"),
+                "thumbnail_url": v.get("thumbnail_url"),
+                "views": int(v.get("views") or 0),
+                "likes": int(v.get("likes") or 0),
+                "comments": int(v.get("comments") or 0),
+            }
+            for v in sorted_by_views
+        ]
+
+    return {
+        "total_videos": total_videos,
+        "total_views": total_views,
+        "total_likes": total_likes,
+        "total_video_comments": total_video_comments,
+        "total_collected_comments": total_collected_comments,
+        "sentiment": {
+            **sentiment_counts,
+            "total": total_collected_comments,
+        },
+        "latest_video": latest_video,
+        "top_videos": top_videos,
+    }
+
+
 def video_manager(video_info: dict, comments: list[dict], user_id: str) -> str:
     video_id = get_video_id_if_exists(video_info["codeURL"], user_id)
 
