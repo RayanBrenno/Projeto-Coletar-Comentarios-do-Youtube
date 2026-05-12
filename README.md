@@ -61,7 +61,7 @@ Além disso, o projeto busca:
 - MongoDB
 - Pydantic
 
-### Backend
+### Infraestrutura e Serviços
 
 - YouTube Data API v3
 - MongoDB Atlas
