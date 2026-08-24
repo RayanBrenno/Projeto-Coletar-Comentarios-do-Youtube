@@ -65,22 +65,32 @@ Além disso, o projeto busca:
 
 - YouTube Data API v3
 - MongoDB Atlas
-- AWS EC2
-- AWS Amplify
-- ngrok (HTTPS Tunnel)
+- Render (backend)
+- Vercel (frontend)
+
+<details>
+<summary>📦 Infraestrutura anterior (AWS Free Tier)</summary>
+
+O projeto rodou inicialmente 100% na AWS:
+
+- AWS EC2 (backend)
+- AWS Amplify (frontend)
+- ngrok (túnel HTTPS gratuito, usado pra dar HTTPS à instância EC2)
+
+Após o fim do período gratuito da AWS, o projeto foi migrado para Render (backend) e Vercel (frontend), que possuem planos gratuitos permanentes.
+
+</details>
 
 ---
 
 ## ⚙️ Como rodar o projeto
 
 > O projeto já está disponível online no link abaixo:  
-https://main.d3m1d4qui9fbcp.amplifyapp.com/
+https://projeto-coletar-comentarios-do-yout.vercel.app/
 
-> O frontend está hospedado no AWS Amplify e o backend em uma instância AWS EC2.
+> O frontend está hospedado na Vercel e o backend no Render.
 
-> Atualmente o backend utiliza um túnel HTTPS gratuito via ngrok para comunicação segura entre frontend e backend.
-
-> Devido às limitações do plano gratuito do ngrok, o túnel pode eventualmente ficar offline ou ter sua URL alterada, o que pode causar indisponibilidade temporária da aplicação.
+> O backend roda no plano gratuito do Render, que "dorme" após um período de inatividade. Isso pode fazer a primeira requisição depois de um tempo parado demorar ~30-50s até o servidor acordar.
 
 > Caso queira executar localmente, siga os passos abaixo.
 
@@ -106,11 +116,18 @@ uvicorn app.main:app --reload
 
 Servidor disponível em: http://127.0.0.1:8000
 
+Crie um arquivo `.env` dentro de `backend/` com as seguintes variáveis:
+
+```
+MONGO_URL=<sua connection string do MongoDB Atlas>
+MONGO_DB=<nome do banco>
+YOUTUBE_API_KEY=<sua chave da YouTube Data API v3>
+API_FRONT_URL=http://localhost:5173
+```
+
 ### 🔜 Frontend (React)
 
 ```bash
-
-cd backend
 
 cd frontend
 
@@ -121,10 +138,16 @@ npm run dev
 
 App disponível em: http://localhost:5173
 
+Crie um arquivo `.env` dentro de `frontend/` com a seguinte variável:
+
+```
+VITE_API_URL=http://127.0.0.1:8000
+```
+
 
 ## 🔄 Fluxo de funcionamento
 
-1. O usuário acessa a aplicação através do frontend hospedado no AWS Amplify.
+1. O usuário acessa a aplicação através do frontend hospedado na Vercel.
 
 2. Na tela inicial, o usuário pode:
    - Fazer login
